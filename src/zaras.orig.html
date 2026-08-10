@@ -163,13 +163,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .add:active{transform:scale(.96)}
 
 .card.slim{flex-direction:row;align-items:stretch}
-/* Slim cards lay out as a row, so the thumbnail becomes a fixed left column rather
-   than a 4/3 band across the top. aspect-ratio must be cleared or it fights the
-   stretch and collapses the image to nothing. */
-.card.slim .card-img{flex:0 0 38%;aspect-ratio:auto;align-self:stretch;min-height:112px}
-.card.slim .card-body{padding:.85rem .95rem;min-width:0;flex:1}
-.card.slim .card-img.noimg .ph-mark svg{width:24px;height:24px}
-.card.slim .card-img.noimg .ph-mark span{font-size:.6rem}
+.card.slim .card-body{padding:.85rem .95rem}
 .card.slim h4{font-size:.92rem}
 .card.slim p{font-size:.76rem}
 .card.slim .price{font-size:1rem}
@@ -296,20 +290,6 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         margin-right:calc(-1 * max(var(--pad-x),env(safe-area-inset-right)))}
   .tabs::-webkit-scrollbar{display:none}
   .tab{scroll-snap-align:center;flex:0 0 auto;padding:.6rem 1rem;font-size:.68rem}
-
-  /* Below 900px every card uses the row layout the Beverages tab already had. A
-     full-width 4/3 tile is ~340 CSS px, which wants ~680 device px on a DPR-2 tablet
-     and ~1020 on a DPR-3 phone; the inlined images are 480 px, so they upscale and go
-     visibly soft — fine on a DPR-1 desktop, mushy on a handset. At ~130 CSS px the same
-     file is sharp at any DPR, and it fits several menu items per screen instead of one.
-     Raising the image size instead would roughly double the page. */
-  .card{flex-direction:row;align-items:stretch}
-  .card .card-img{flex:0 0 38%;aspect-ratio:auto;align-self:stretch;min-height:118px}
-  .card .card-body{padding:.85rem .95rem;min-width:0;flex:1}
-  .card h4{font-size:.95rem}
-  .card p{font-size:.78rem}
-  .card-img.noimg .ph-mark svg{width:24px;height:24px}
-  .card-img.noimg .ph-mark span{font-size:.6rem}
 }
 @media (max-width:600px){
   :root{--nav-h:58px;--pad-x:1.1rem}
@@ -748,7 +728,7 @@ const MENU = [
   ]}
  ]},
 
- {id:"bev", label:"Beverages", compact:true, groups:[
+ {id:"bev", label:"Beverages", groups:[
   {title:"Vitamin Bar", items:[
    {n:"Pure Mango Juice",d:"Fresh mango juice.",p:6.95,t:["Veg","V"],i:"zara-ai-pure-mango-juice.jpg"},
    {n:"For Real Orange Juice",d:"Freshly squeezed organic orange juice.",p:6.95,t:["Veg","V"],i:"zara-ai-orange-juice.jpg"},
