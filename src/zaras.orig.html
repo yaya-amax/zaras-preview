@@ -1,3 +1,11 @@
+<meta charset="utf-8">
+<!-- Without this the page renders into a ~980px virtual viewport on phones and every
+     max-width media query below silently never fires. viewport-fit=cover is what makes
+     the env(safe-area-inset-*) padding work on notched devices. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B3A5C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#122843" media="(prefers-color-scheme: dark)">
+<meta name="description" content="Zara's Mediterranean Kitchen — Mediterranean, Greek and halal cooking in Spring, Texas. Browse the full menu and build an order. Design concept, not affiliated with the restaurant.">
 <title>Zara's Mediterranean Kitchen — Order Online</title>
 <style>
 :root{
@@ -28,8 +36,11 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+/* Height of the fixed nav. The sticky category tabs and anchor scrolling both key off
+   this, so the three stay in agreement instead of drifting apart per breakpoint. */
+:root{--nav-h:68px;--pad-x:1.5rem}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 3.6rem)}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
 h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--heading);line-height:1.15;text-wrap:balance;font-weight:400}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
@@ -37,7 +48,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
 /* NAV */
-.nav{position:fixed;inset:0 0 auto 0;z-index:200;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 1.5rem;background:rgba(27,58,92,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(200,150,62,.25)}
+.nav{position:fixed;inset:0 0 auto 0;z-index:200;display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:var(--nav-h);padding:.7rem max(1.5rem,env(safe-area-inset-right)) .7rem max(1.5rem,env(safe-area-inset-left));background:rgba(27,58,92,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(200,150,62,.25)}
 .nav-brand{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
 .nav-brand img{height:46px;width:auto;object-fit:contain}
 .nav-brand-fallback{font-family:Georgia,serif;color:var(--limestone);font-size:1.05rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
@@ -52,7 +63,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .nav-toggle span{display:block;width:22px;height:2px;background:var(--limestone);margin:5px 0;transition:transform .25s,opacity .25s}
 
 /* HERO */
-.hero{position:relative;min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 4rem;background:var(--aegean);overflow:hidden}
+.hero{position:relative;min-height:92vh;min-height:92svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 4rem;background:var(--aegean);overflow:hidden}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.30;filter:saturate(1.1)}
 .hero-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,40,67,.86) 0%,rgba(18,40,67,.62) 45%,rgba(18,40,67,.94) 100%)}
 .hero-tiles{position:absolute;inset:0;opacity:.10;pointer-events:none}
@@ -76,7 +87,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .tile-rule svg{width:100%;height:100%}
 
 /* SECTION */
-.section{padding:4.5rem 1.5rem}
+.section{padding:4.5rem max(var(--pad-x),env(safe-area-inset-right)) 4.5rem max(var(--pad-x),env(safe-area-inset-left))}
 .wrap{max-width:1180px;margin:0 auto}
 .eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem}
 .stitle{font-size:clamp(1.7rem,4vw,2.7rem);margin-bottom:1.1rem}
@@ -99,7 +110,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .menu{background:var(--bg-alt)}
 .menu-head{text-align:center;margin-bottom:2rem}
 .menu-head .lead{margin:0 auto}
-.tabs{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;margin-bottom:2.5rem;position:sticky;top:66px;z-index:80;padding:.8rem;background:var(--bg-alt);border-bottom:1px solid var(--line)}
+.tabs{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;margin-bottom:2.5rem;position:sticky;top:var(--nav-h);z-index:80;padding:.8rem;background:var(--bg-alt);border-bottom:1px solid var(--line)}
 .tab{padding:.5rem 1.05rem;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:2px;background:var(--surface);transition:all .18s;white-space:nowrap}
 .tab:hover{border-color:var(--accent);color:var(--text)}
 .tab.on{background:var(--aegean);border-color:var(--aegean);color:var(--limestone)}
@@ -236,7 +247,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .ci-sub{font-family:Georgia,serif;font-size:.95rem;color:var(--heading);font-variant-numeric:tabular-nums}
 .ci-del{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.7;transition:color .2s,opacity .2s;align-self:flex-start;margin-top:.1rem}
 .ci-del:hover{color:var(--pomegranate);opacity:1}
-.cart-foot{border-top:1px solid var(--line);padding:1.2rem 1.3rem 1.4rem;background:var(--bg-alt);display:flex;flex-direction:column;gap:.5rem}
+.cart-foot{border-top:1px solid var(--line);padding:1.2rem 1.3rem calc(1.4rem + env(safe-area-inset-bottom));background:var(--bg-alt);display:flex;flex-direction:column;gap:.5rem}
 .trow{display:flex;justify-content:space-between;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .trow.total{padding-top:.65rem;margin-top:.25rem;border-top:1px solid var(--line);font-family:Georgia,serif;font-size:1.28rem;color:var(--heading)}
 .checkout{width:100%;justify-content:center;margin-top:.7rem}
@@ -253,34 +264,50 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   border-top:1px solid rgba(240,235,225,.14);font-size:.7rem;line-height:1.65;
   text-align:center;opacity:.62}
 @media(max-width:600px){
-  .concept-flag{left:.6rem;bottom:.6rem;font-size:.6rem;padding:.42rem .7rem}
+  .concept-flag{left:calc(.6rem + env(safe-area-inset-left));bottom:calc(.6rem + env(safe-area-inset-bottom));font-size:.6rem;padding:.42rem .7rem}
   .concept-full{display:none}
   .concept-short{display:inline}
 }
 
 /* TOAST */
-.toast{position:fixed;bottom:1.6rem;left:50%;transform:translate(-50%,140%);background:var(--aegean);color:var(--limestone);padding:.85rem 1.6rem;border-radius:3px;font-size:.82rem;font-weight:600;letter-spacing:.03em;box-shadow:0 10px 32px var(--shadow-lg);z-index:400;transition:transform .34s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:.6rem;max-width:calc(100% - 2rem)}
+.toast{position:fixed;bottom:calc(1.6rem + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,140%);background:var(--aegean);color:var(--limestone);padding:.85rem 1.6rem;border-radius:3px;font-size:.82rem;font-weight:600;letter-spacing:.03em;box-shadow:0 10px 32px var(--shadow-lg);z-index:400;transition:transform .34s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:.6rem;max-width:calc(100% - 2rem)}
 .toast.on{transform:translate(-50%,0)}
 .toast svg{color:var(--saffron-light);flex-shrink:0}
 
 @media (max-width:900px){
   .about-grid,.cat-grid{grid-template-columns:1fr;gap:2.2rem}
   .nav-links{display:none}
-  .nav-toggle{display:block}
+  .nav-toggle{display:block;min-width:44px;min-height:44px}
   .nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(27,58,92,.99);padding:1.6rem;gap:1.2rem;border-bottom:1px solid rgba(200,150,62,.25)}
+  .nav-links.open a{padding:.35rem 0}
+
+  /* 11 categories wrap to three or four stacked rows below ~900px and, being sticky,
+     eat a large share of the screen for the whole scroll. A single swipeable strip is
+     the standard pattern and keeps the sticky header one row tall. */
+  .tabs{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x proximity;
+        -webkit-overflow-scrolling:touch;scrollbar-width:none;padding:.5rem .9rem;
+        margin-left:calc(-1 * max(var(--pad-x),env(safe-area-inset-left)));
+        margin-right:calc(-1 * max(var(--pad-x),env(safe-area-inset-right)))}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{scroll-snap-align:center;flex:0 0 auto;padding:.6rem 1rem;font-size:.68rem}
 }
 @media (max-width:600px){
-  .section{padding:3.2rem 1.1rem}
+  :root{--nav-h:58px;--pad-x:1.1rem}
+  .section{padding-top:3.2rem;padding-bottom:3.2rem}
   .about-vals{grid-template-columns:1fr}
-  .hero{min-height:88vh;padding-top:7rem}
+  .hero{min-height:88vh;min-height:88svh;padding-top:7rem}
   .hero-logo{height:88px}
-  .tabs{top:62px;padding:.6rem .3rem}
-  .tab{padding:.42rem .8rem;font-size:.64rem}
   .grid,.grid.compact{grid-template-columns:1fr}
-  .nav{padding:.6rem 1rem}
+  .nav{padding:.6rem max(1rem,env(safe-area-inset-right)) .6rem max(1rem,env(safe-area-inset-left))}
   .nav-brand img{height:38px}
   .del-in{flex-direction:column;gap:1rem}
   .cart-btn span.lbl{display:none}
+}
+/* Landscape phones: a 92svh hero plus 7rem of top padding leaves no room for the
+   content itself, so let the hero shrink to fit. */
+@media (max-height:520px) and (orientation:landscape){
+  .hero{min-height:auto;padding:6rem 1.5rem 3rem}
+  .hero-logo{height:64px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
