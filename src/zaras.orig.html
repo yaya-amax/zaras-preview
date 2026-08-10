@@ -163,7 +163,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .add:active{transform:scale(.96)}
 
 .card.slim{flex-direction:row;align-items:stretch}
-.card.slim .card-body{padding:.85rem .95rem}
+/* Slim cards lay out as a row, so the thumbnail becomes a fixed left column rather
+   than a 4/3 band across the top. aspect-ratio must be cleared or it fights the
+   stretch and collapses the image to nothing. */
+.card.slim .card-img{flex:0 0 38%;aspect-ratio:auto;align-self:stretch;min-height:112px}
+.card.slim .card-body{padding:.85rem .95rem;min-width:0;flex:1}
+.card.slim .card-img.noimg .ph-mark svg{width:24px;height:24px}
+.card.slim .card-img.noimg .ph-mark span{font-size:.6rem}
 .card.slim h4{font-size:.92rem}
 .card.slim p{font-size:.76rem}
 .card.slim .price{font-size:1rem}
@@ -828,7 +834,7 @@ function itemCard(it, compact){
       + `</svg><span>Zara's</span></span></div>`;
   const tags = (it.t||[]).map(t=>`<span class="tag ${tagClass(t)}">${t}</span>`).join("");
   return `<article class="card${compact?" slim":""}">
-    ${compact?"":img}
+    ${img}
     <div class="card-body">
       <h4>${esc(it.n)}</h4>
       <p>${esc(it.d)}</p>
