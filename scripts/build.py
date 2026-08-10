@@ -20,6 +20,9 @@ from PIL import Image
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, "src", "zaras.orig.html")
 IMG = os.path.join(ROOT, "src", "img")
+# Generated dish photography for items the restaurant has no photo of. Unlike
+# src/img/ this is committed, since it cannot be re-fetched from their server.
+IMG_AI = os.path.join(ROOT, "src", "img-ai")
 OUT = os.path.join(ROOT, "index.html")
 BASE = "https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/"
 
@@ -67,7 +70,8 @@ def encode(path, name):
 mapping = {}
 missing = []
 for n in names:
-    p = os.path.join(IMG, n.replace("/", "__"))
+    flat = n.replace("/", "__")
+    p = os.path.join(IMG_AI if n.startswith("zara-ai-") else IMG, flat)
     if os.path.exists(p):
         mapping[n] = encode(p, n)
     else:

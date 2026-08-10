@@ -22,7 +22,9 @@ names = set(re.findall(r'\bi:"([^"]+)"', src))
 names.update(
     re.findall(re.escape(BASE) + r"([A-Za-z0-9_\-./]+\.(?:png|jpg|jpeg))", src)
 )
-names = sorted(n for n in names if n)
+# zara-ai-* are generated locally and committed under src/img-ai/ — they do not
+# exist on the restaurant's server, so never try to fetch them.
+names = sorted(n for n in names if n and not n.startswith("zara-ai-"))
 print("referenced:", len(names))
 
 results = {}

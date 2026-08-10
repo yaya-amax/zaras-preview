@@ -12,7 +12,9 @@ summarizes the order and shows the restaurant's real phone number for a pickup c
 
 `index.html` — the entire site. One self-contained file, no build step, no dependencies.
 
-- 212 menu items across 11 categories, tab-filtered
+- 212 menu items across 11 categories, tab-filtered — 97 with photography
+- Wraps, Burgers & Tortas and Signature Entrées are fully illustrated; items without a
+  photo render a branded tile rather than an empty slot
 - Working cart: add, adjust quantity, remove, subtotal + 8.25% tax, persists across reloads
 - All imagery embedded as data URIs, so the page renders offline
 - Light / dark / system theming, responsive to phone width, reduced-motion respected
@@ -23,15 +25,21 @@ Open `index.html` in any browser. That's it.
 
 ## Editing it
 
-**Never edit `index.html` directly.** It is ~3.7 MB of inline base64 and is a build
+**Never edit `index.html` directly.** It is ~5 MB of inline base64 and is a build
 artifact. Edit the source instead:
 
 ```
 src/zaras.orig.html     the real source — small, references images by URL
 src/img/                downloaded photography (gitignored, ~43 MB)
+src/img-ai/             generated dish photography (committed, ~3 MB)
 scripts/fetch_images.py downloads src/img/ from the restaurant's site
 scripts/build.py        inlines every image and writes index.html
 ```
+
+`src/img-ai/` is committed rather than gitignored because, unlike `src/img/`, it
+cannot be re-fetched from anywhere — losing it would lose the images. Its files are
+referenced by the `zara-ai-` filename prefix, which `build.py` resolves against this
+directory and `fetch_images.py` skips.
 
 Workflow:
 
