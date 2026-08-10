@@ -26,8 +26,13 @@ IMG_AI = os.path.join(ROOT, "src", "img-ai")
 OUT = os.path.join(ROOT, "index.html")
 BASE = "https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/"
 
-MAXPX = int(os.environ.get("MAXPX", "560"))
-MAXKB = int(os.environ.get("MAXKB", "90"))
+# Menu tiles render at roughly 340 CSS px wide, so 480 px on the longest edge is still
+# above 1x display size and only slightly soft on retina. Dropping from 560/90 to 480/60
+# cut the built page from 7.56 MB to 6.23 MB, which matters because the page is a single
+# file of inline base64 -- nothing renders until the whole thing has downloaded.
+# Measured alternatives: 560/90 -> 7.56 MB, 480/60 -> 6.23 MB, 420/48 -> 5.13 MB.
+MAXPX = int(os.environ.get("MAXPX", "480"))
+MAXKB = int(os.environ.get("MAXKB", "60"))
 
 src = open(SRC, encoding="utf-8").read()
 
