@@ -1,0 +1,3 @@
+# Downloaded source photography (~43 MB). Regenerate with:
+#   python scripts/fetch_images.py
+src/img/

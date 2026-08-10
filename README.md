@@ -21,6 +21,30 @@ summarizes the order and shows the restaurant's real phone number for a pickup c
 
 Open `index.html` in any browser. That's it.
 
+## Editing it
+
+**Never edit `index.html` directly.** It is ~3.7 MB of inline base64 and is a build
+artifact. Edit the source instead:
+
+```
+src/zaras.orig.html     the real source — small, references images by URL
+src/img/                downloaded photography (gitignored, ~43 MB)
+scripts/fetch_images.py downloads src/img/ from the restaurant's site
+scripts/build.py        inlines every image and writes index.html
+```
+
+Workflow:
+
+```bash
+python scripts/fetch_images.py   # only if src/img/ is missing
+python scripts/build.py          # regenerates index.html
+git add -A && git commit -m "..." && git push
+```
+
+GitHub Pages redeploys about a minute after the push.
+
+Requires Python with Pillow (`pip install pillow`) and `curl` on PATH.
+
 ## Credit
 
 Menu content, photography, and branding belong to Zara's Mediterranean Kitchen.

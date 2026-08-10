@@ -1,0 +1,945 @@
+<title>Zara's Mediterranean Kitchen — Order Online</title>
+<style>
+:root{
+  --aegean:#1B3A5C; --aegean-deep:#122843; --aegean-light:#2A5580;
+  --saffron:#C8963E; --saffron-light:#D9AC5C; --saffron-deep:#A87A2A;
+  --limestone:#FAF7F2; --limestone-warm:#F1EBE0; --sand:#E4D9C6;
+  --olive:#5A6E3F; --pomegranate:#8B2E3C; --ink:#221C15;
+
+  --bg:var(--limestone); --bg-alt:var(--limestone-warm); --surface:#fff;
+  --text:var(--ink); --muted:#6B6154; --heading:var(--aegean);
+  --line:var(--sand); --accent:var(--saffron); --accent-ink:var(--ink);
+  --shadow:rgba(34,28,21,.10); --shadow-lg:rgba(34,28,21,.16);
+  --ph1:#E9DCC4; --ph2:#D6C4A4;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14110E; --bg-alt:#1C1814; --surface:#221D18;
+  --text:#EDE6DA; --muted:#A2988A; --heading:#E4D9C6;
+  --line:#332C24; --accent:#D9AC5C; --accent-ink:#14110E;
+  --shadow:rgba(0,0,0,.4); --shadow-lg:rgba(0,0,0,.55);
+  --ph1:#2E2820; --ph2:#3D352A;
+}}
+:root[data-theme="dark"]{
+  --bg:#14110E; --bg-alt:#1C1814; --surface:#221D18;
+  --text:#EDE6DA; --muted:#A2988A; --heading:#E4D9C6;
+  --line:#332C24; --accent:#D9AC5C; --accent-ink:#14110E;
+  --shadow:rgba(0,0,0,.4); --shadow-lg:rgba(0,0,0,.55);
+  --ph1:#2E2820; --ph2:#3D352A;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--heading);line-height:1.15;text-wrap:balance;font-weight:400}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:200;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 1.5rem;background:rgba(27,58,92,.97);backdrop-filter:blur(10px);border-bottom:1px solid rgba(200,150,62,.25)}
+.nav-brand{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
+.nav-brand img{height:46px;width:auto;object-fit:contain}
+.nav-brand-fallback{font-family:Georgia,serif;color:var(--limestone);font-size:1.05rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.nav-links{display:flex;gap:1.6rem;list-style:none;margin-left:auto}
+.nav-links a{color:var(--limestone);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;transition:opacity .2s,color .2s}
+.nav-links a:hover{opacity:1;color:var(--saffron-light)}
+.nav-actions{display:flex;align-items:center;gap:.6rem;flex-shrink:0}
+.cart-btn{position:relative;display:flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;background:var(--saffron);color:var(--ink);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;transition:background .2s,transform .15s}
+.cart-btn:hover{background:var(--saffron-light);transform:translateY(-1px)}
+.cart-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;background:var(--pomegranate);color:#fff;border-radius:10px;font-size:.68rem;font-weight:700;letter-spacing:0}
+.nav-toggle{display:none;padding:.4rem}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--limestone);margin:5px 0;transition:transform .25s,opacity .25s}
+
+/* HERO */
+.hero{position:relative;min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8rem 1.5rem 4rem;background:var(--aegean);overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.30;filter:saturate(1.1)}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,40,67,.86) 0%,rgba(18,40,67,.62) 45%,rgba(18,40,67,.94) 100%)}
+.hero-tiles{position:absolute;inset:0;opacity:.10;pointer-events:none}
+.hero-inner{position:relative;z-index:2;max-width:860px;display:flex;flex-direction:column;align-items:center;gap:1.1rem}
+.hero-logo{height:120px;width:auto;object-fit:contain;filter:drop-shadow(0 4px 18px rgba(0,0,0,.45))}
+.hero-eyebrow{font-size:.7rem;letter-spacing:.34em;text-transform:uppercase;color:var(--saffron-light)}
+.hero-title{font-size:clamp(2.4rem,6.5vw,4.6rem);color:var(--limestone);letter-spacing:.02em}
+.hero-title em{font-style:italic;color:var(--saffron-light)}
+.hero-sub{font-family:Georgia,serif;font-style:italic;font-size:clamp(1rem,2.4vw,1.45rem);color:var(--limestone);opacity:.88}
+.hero-tag{font-size:.76rem;letter-spacing:.3em;text-transform:uppercase;color:var(--limestone);opacity:.6}
+.hero-actions{display:flex;gap:.8rem;flex-wrap:wrap;justify-content:center;margin-top:.8rem}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2rem;font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border-radius:2px;transition:all .2s}
+.btn-primary{background:var(--saffron);color:var(--ink)}
+.btn-primary:hover{background:var(--saffron-light);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.25)}
+.btn-ghost{background:transparent;color:var(--limestone);border:1px solid rgba(250,247,242,.35)}
+.btn-ghost:hover{border-color:var(--saffron-light);color:var(--saffron-light)}
+.halal{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.4rem;padding:.45rem 1rem;border:1px solid rgba(250,247,242,.22);border-radius:2px;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--limestone);opacity:.72}
+
+/* TILE DIVIDER */
+.tile-rule{height:34px;background:var(--bg);display:flex;justify-content:center;overflow:hidden}
+.tile-rule svg{width:100%;height:100%}
+
+/* SECTION */
+.section{padding:4.5rem 1.5rem}
+.wrap{max-width:1180px;margin:0 auto}
+.eyebrow{font-size:.68rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);margin-bottom:.8rem}
+.stitle{font-size:clamp(1.7rem,4vw,2.7rem);margin-bottom:1.1rem}
+.lead{font-size:1.02rem;color:var(--muted);max-width:62ch;line-height:1.75}
+
+/* ABOUT */
+.about{background:var(--bg)}
+.about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:3.5rem;align-items:center}
+.about-vals{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem 2rem;margin-top:2rem}
+.val{border-top:1px solid var(--line);padding-top:.9rem}
+.val-l{font-size:.66rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:.35rem}
+.val-t{font-size:.87rem;color:var(--muted);line-height:1.55}
+.about-mosaic{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:.5rem}
+.about-mosaic .cell{aspect-ratio:1;overflow:hidden;border-radius:2px;background:linear-gradient(135deg,var(--ph1),var(--ph2))}
+.about-mosaic .cell:first-child{grid-column:span 2;aspect-ratio:2/1.1}
+.about-mosaic img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.about-mosaic .cell:hover img{transform:scale(1.05)}
+
+/* MENU */
+.menu{background:var(--bg-alt)}
+.menu-head{text-align:center;margin-bottom:2rem}
+.menu-head .lead{margin:0 auto}
+.tabs{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;margin-bottom:2.5rem;position:sticky;top:66px;z-index:80;padding:.8rem;background:var(--bg-alt);border-bottom:1px solid var(--line)}
+.tab{padding:.5rem 1.05rem;font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:2px;background:var(--surface);transition:all .18s;white-space:nowrap}
+.tab:hover{border-color:var(--accent);color:var(--text)}
+.tab.on{background:var(--aegean);border-color:var(--aegean);color:var(--limestone)}
+:root[data-theme="dark"] .tab.on,:root:not([data-theme="light"]) .tab.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tab.on{background:var(--aegean);border-color:var(--aegean);color:var(--limestone)}}
+
+.cat{display:none}
+.cat.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.subhead{display:flex;align-items:center;gap:1rem;margin:2.2rem 0 1.2rem}
+.subhead:first-child{margin-top:0}
+.subhead h3{font-size:1.35rem;white-space:nowrap}
+.subhead::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:1.3rem}
+.grid.compact{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:.9rem}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px var(--shadow);transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 28px var(--shadow-lg)}
+.card-img{aspect-ratio:4/3;background:linear-gradient(135deg,var(--ph1),var(--ph2));position:relative;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.card:hover .card-img img{transform:scale(1.06)}
+.card-img::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M20 0 L40 20 L20 40 L0 20Z' fill='none' stroke='%23C8963E' stroke-width='.6' opacity='.35'/%3E%3C/svg%3E");opacity:0;transition:opacity .3s;pointer-events:none}
+.card-img.noimg::after{opacity:1}
+/* Photo-less items get a deliberate brand tile rather than an empty slot,
+   so they read as part of the set instead of a missing image. */
+.card-img.noimg{display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 42%,var(--ph1) 0%,var(--ph2) 78%)}
+.ph-mark{position:relative;z-index:1;display:flex;flex-direction:column;
+  align-items:center;gap:.42rem;opacity:.6}
+.ph-mark svg{width:30px;height:30px;color:var(--accent)}
+.ph-mark span{font-family:Georgia,'Times New Roman',serif;font-size:.62rem;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--heading)}
+.card-body{padding:1.05rem 1.1rem 1.1rem;display:flex;flex-direction:column;gap:.5rem;flex:1}
+.card h4{font-size:1.02rem;line-height:1.3}
+.card p{font-size:.82rem;color:var(--muted);line-height:1.55;flex:1}
+.tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.tag{font-size:.58rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:.16rem .42rem;border-radius:2px;border:1px solid currentColor}
+.tag.veg{color:var(--olive)}
+.tag.gf{color:var(--aegean-light)}
+.tag.n{color:var(--saffron-deep)}
+:root[data-theme="dark"] .tag.gf,:root:not([data-theme="light"]) .tag.gf{color:#7BA7D4}
+:root[data-theme="dark"] .tag.veg,:root:not([data-theme="light"]) .tag.veg{color:#9BB472}
+.card-foot{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.3rem;padding-top:.7rem;border-top:1px solid var(--line)}
+.price{font-family:Georgia,serif;font-size:1.12rem;color:var(--heading);font-variant-numeric:tabular-nums}
+.price small{font-size:.7rem;color:var(--muted);font-family:system-ui,sans-serif;display:block;letter-spacing:.05em}
+.add{padding:.5rem 1rem;background:var(--aegean);color:var(--limestone);font-size:.66rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;border-radius:2px;transition:background .18s,transform .12s;white-space:nowrap}
+.add:hover{background:var(--aegean-light);transform:scale(1.04)}
+:root[data-theme="dark"] .add,:root:not([data-theme="light"]) .add{background:var(--accent);color:var(--accent-ink)}
+.add:active{transform:scale(.96)}
+
+.card.slim{flex-direction:row;align-items:stretch}
+.card.slim .card-body{padding:.85rem .95rem}
+.card.slim h4{font-size:.92rem}
+.card.slim p{font-size:.76rem}
+.card.slim .price{font-size:1rem}
+
+/* TESTIMONIALS */
+.quotes{background:var(--aegean);position:relative;overflow:hidden}
+.quotes .stitle,.quotes .eyebrow{color:var(--limestone)}
+.quotes .eyebrow{color:var(--saffron-light)}
+.qgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.3rem;margin-top:2.2rem}
+.q{padding:1.6rem;border:1px solid rgba(250,247,242,.14);border-radius:3px;background:rgba(250,247,242,.03)}
+.q-stars{color:var(--saffron-light);font-size:.85rem;letter-spacing:.12em;margin-bottom:.8rem}
+.q-text{font-family:Georgia,serif;font-style:italic;font-size:.96rem;line-height:1.7;color:var(--limestone);opacity:.92;margin-bottom:1rem}
+.q-who{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--limestone);opacity:.55}
+
+/* CATERING */
+.catering{background:var(--bg)}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center}
+.cat-list{display:flex;flex-direction:column;gap:0;margin-top:1.6rem}
+.cat-item{display:flex;align-items:center;gap:.9rem;padding:.9rem 0;border-bottom:1px solid var(--line);font-family:Georgia,serif;font-size:1.02rem;color:var(--heading)}
+.cat-item svg{color:var(--accent);flex-shrink:0}
+.cat-card{background:var(--bg-alt);border:1px solid var(--line);border-radius:3px;padding:2.5rem;text-align:center}
+.cat-q{font-family:Georgia,serif;font-style:italic;font-size:clamp(1.15rem,2.4vw,1.6rem);color:var(--heading);line-height:1.5;margin-bottom:1.2rem}
+.cat-a{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+
+/* DELIVERY */
+.delivery{background:var(--saffron);padding:1.8rem 1.5rem}
+.del-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:1.6rem;flex-wrap:wrap}
+.del-t{font-family:Georgia,serif;font-size:1.12rem;color:var(--ink)}
+.del-links{display:flex;gap:.7rem;flex-wrap:wrap}
+.del-links a{padding:.6rem 1.3rem;background:var(--ink);color:var(--limestone);font-size:.7rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;border-radius:2px;transition:opacity .2s}
+.del-links a:hover{opacity:.82}
+
+/* CONTACT */
+.contact{background:var(--bg-alt)}
+.c-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2.5rem;margin-top:2.5rem}
+.c-block h3{font-family:system-ui,sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+.c-block p,.c-block a{font-size:.94rem;color:var(--muted);line-height:1.8}
+.c-block a:hover{color:var(--accent)}
+.hrow{display:flex;justify-content:space-between;gap:1rem;padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.88rem}
+.hrow span:first-child{color:var(--text);font-weight:600}
+.hrow span:last-child{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* FOOTER */
+.foot{background:var(--aegean-deep);color:var(--limestone);padding:2.8rem 1.5rem 2rem}
+.foot-in{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:1.2rem;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:.8rem}
+.foot-brand img{height:44px;width:auto;object-fit:contain}
+.foot-name{font-family:Georgia,serif;font-size:.92rem;letter-spacing:.1em;opacity:.8}
+.foot-social{display:flex;gap:1.3rem}
+.foot-social a{font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;opacity:.55;transition:opacity .2s,color .2s}
+.foot-social a:hover{opacity:1;color:var(--saffron-light)}
+.foot-bar{max-width:1180px;margin:2rem auto 0;padding-top:1.6rem;border-top:1px solid rgba(250,247,242,.12);text-align:center;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;opacity:.42;line-height:2}
+
+/* CART */
+.scrim{position:fixed;inset:0;background:rgba(18,40,67,.55);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;z-index:290}
+.scrim.on{opacity:1;visibility:visible}
+.cart{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--bg);border-left:1px solid var(--line);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .34s cubic-bezier(.4,0,.2,1);z-index:300;box-shadow:-8px 0 40px var(--shadow-lg)}
+.cart.on{transform:none}
+.cart-head{display:flex;align-items:center;justify-content:space-between;padding:1.3rem 1.4rem;border-bottom:1px solid var(--line);background:var(--aegean);color:var(--limestone)}
+.cart-head h3{color:var(--limestone);font-size:1.18rem}
+.cart-close{font-size:1.6rem;line-height:1;opacity:.75;transition:opacity .2s;padding:.2rem .4rem}
+.cart-close:hover{opacity:1}
+.cart-body{flex:1;overflow-y:auto;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.85rem}
+.cart-empty{text-align:center;padding:3.5rem 1rem;color:var(--muted)}
+.cart-empty svg{margin:0 auto 1.1rem;opacity:.28}
+.cart-empty p{font-size:.9rem;line-height:1.6}
+.ci{display:flex;gap:.85rem;padding:.85rem;background:var(--surface);border:1px solid var(--line);border-radius:3px;animation:slidein .28s ease}
+@keyframes slidein{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.ci.out{animation:slideout .22s ease forwards}
+@keyframes slideout{to{opacity:0;transform:translateX(24px);max-height:0;padding-block:0;margin-bottom:-.85rem}}
+.ci-thumb{width:58px;height:58px;flex-shrink:0;border-radius:2px;background:linear-gradient(135deg,var(--ph1),var(--ph2));overflow:hidden}
+.ci-thumb img{width:100%;height:100%;object-fit:cover}
+.ci-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:.35rem}
+.ci-name{font-family:Georgia,serif;font-size:.9rem;color:var(--heading);line-height:1.3}
+.ci-price{font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.ci-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.15rem}
+.qty{display:flex;align-items:center;gap:.15rem;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.qty button{width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--muted);transition:background .15s,color .15s}
+.qty button:hover{background:var(--accent);color:var(--accent-ink)}
+.qty span{min-width:26px;text-align:center;font-size:.82rem;font-weight:600;font-variant-numeric:tabular-nums}
+.ci-sub{font-family:Georgia,serif;font-size:.95rem;color:var(--heading);font-variant-numeric:tabular-nums}
+.ci-del{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.7;transition:color .2s,opacity .2s;align-self:flex-start;margin-top:.1rem}
+.ci-del:hover{color:var(--pomegranate);opacity:1}
+.cart-foot{border-top:1px solid var(--line);padding:1.2rem 1.3rem 1.4rem;background:var(--bg-alt);display:flex;flex-direction:column;gap:.5rem}
+.trow{display:flex;justify-content:space-between;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.trow.total{padding-top:.65rem;margin-top:.25rem;border-top:1px solid var(--line);font-family:Georgia,serif;font-size:1.28rem;color:var(--heading)}
+.checkout{width:100%;justify-content:center;margin-top:.7rem}
+.cart-note{font-size:.66rem;letter-spacing:.05em;color:var(--muted);text-align:center;line-height:1.6;margin-top:.15rem}
+
+/* CONCEPT FLAG */
+.concept-flag{position:fixed;left:1rem;bottom:1rem;z-index:380;display:flex;align-items:center;gap:.5rem;
+  padding:.5rem .85rem;border-radius:999px;background:rgba(18,40,67,.9);backdrop-filter:blur(8px);
+  border:1px solid rgba(200,150,62,.35);color:#F0EBE1;font-size:.68rem;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:600;pointer-events:none;max-width:calc(100% - 2rem)}
+.concept-dot{width:6px;height:6px;border-radius:50%;background:#C8963E;flex:0 0 auto}
+.concept-short{display:none}
+.foot-concept{max-width:640px;margin:1.1rem auto 0;padding-top:1.1rem;
+  border-top:1px solid rgba(240,235,225,.14);font-size:.7rem;line-height:1.65;
+  text-align:center;opacity:.62}
+@media(max-width:600px){
+  .concept-flag{left:.6rem;bottom:.6rem;font-size:.6rem;padding:.42rem .7rem}
+  .concept-full{display:none}
+  .concept-short{display:inline}
+}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.6rem;left:50%;transform:translate(-50%,140%);background:var(--aegean);color:var(--limestone);padding:.85rem 1.6rem;border-radius:3px;font-size:.82rem;font-weight:600;letter-spacing:.03em;box-shadow:0 10px 32px var(--shadow-lg);z-index:400;transition:transform .34s cubic-bezier(.34,1.4,.64,1);display:flex;align-items:center;gap:.6rem;max-width:calc(100% - 2rem)}
+.toast.on{transform:translate(-50%,0)}
+.toast svg{color:var(--saffron-light);flex-shrink:0}
+
+@media (max-width:900px){
+  .about-grid,.cat-grid{grid-template-columns:1fr;gap:2.2rem}
+  .nav-links{display:none}
+  .nav-toggle{display:block}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(27,58,92,.99);padding:1.6rem;gap:1.2rem;border-bottom:1px solid rgba(200,150,62,.25)}
+}
+@media (max-width:600px){
+  .section{padding:3.2rem 1.1rem}
+  .about-vals{grid-template-columns:1fr}
+  .hero{min-height:88vh;padding-top:7rem}
+  .hero-logo{height:88px}
+  .tabs{top:62px;padding:.6rem .3rem}
+  .tab{padding:.42rem .8rem;font-size:.64rem}
+  .grid,.grid.compact{grid-template-columns:1fr}
+  .nav{padding:.6rem 1rem}
+  .nav-brand img{height:38px}
+  .del-in{flex-direction:column;gap:1rem}
+  .cart-btn span.lbl{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+
+<nav class="nav" id="nav">
+  <a href="#top" class="nav-brand">
+    <img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-kitchen-logo_orig.png" alt="Zara's Mediterranean Kitchen" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span class="nav-brand-fallback" style="display:none">Zara's</span>
+  </a>
+  <ul class="nav-links" id="navlinks">
+    <li><a href="#about">Who We Are</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#catering">Catering</a></li>
+    <li><a href="#contact">Visit</a></li>
+    <li><a href="tel:7135759272">(713) 575-9272</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" id="cartbtn" aria-label="Open cart">
+      <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 3h2.5l2 11h9l2-8H6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="17" r="1.3" fill="currentColor"/><circle cx="15" cy="17" r="1.3" fill="currentColor"/></svg>
+      <span class="lbl">Cart</span>
+      <span class="cart-count" id="cartcount">0</span>
+    </button>
+    <button class="nav-toggle" id="navtoggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-bg" style="background-image:url('https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-kitchen-trio-hummus-min_orig.png')"></div>
+  <div class="hero-veil"></div>
+  <svg class="hero-tiles" aria-hidden="true"><defs><pattern id="ht" width="72" height="72" patternUnits="userSpaceOnUse"><path d="M36 0 L72 36 L36 72 L0 36Z" fill="none" stroke="#C8963E" stroke-width=".7"/><circle cx="36" cy="36" r="11" fill="none" stroke="#FAF7F2" stroke-width=".5"/><rect x="18" y="18" width="36" height="36" fill="none" stroke="#FAF7F2" stroke-width=".3" transform="rotate(45 36 36)"/></pattern></defs><rect width="100%" height="100%" fill="url(#ht)"/></svg>
+
+  <div class="hero-inner">
+    <img class="hero-logo" src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-kitchen-logo_orig.png" alt="Zara's Mediterranean Kitchen" onerror="this.style.display='none'">
+    <p class="hero-eyebrow">415 Rayford Rd &middot; Spring, Texas</p>
+    <h1 class="hero-title">Zara's <em>Mediterranean</em> Kitchen</h1>
+    <p class="hero-sub">Where every dish becomes your wish</p>
+    <p class="hero-tag">Fresh &middot; Authentic &middot; Delicious</p>
+    <div class="hero-actions">
+      <a href="#menu" class="btn btn-primary">Order Online</a>
+      <a href="tel:7135759272" class="btn btn-ghost">Call To-Go</a>
+    </div>
+    <div class="halal">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      100% Halal Certified
+    </div>
+  </div>
+</section>
+
+<div class="tile-rule"><svg viewBox="0 0 1200 34" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="tr" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M17 0 L34 17 L17 34 L0 17Z" fill="none" stroke="#C8963E" stroke-width=".9" opacity=".38"/><circle cx="17" cy="17" r="3.5" fill="none" stroke="#C8963E" stroke-width=".6" opacity=".28"/></pattern></defs><rect width="1200" height="34" fill="url(#tr)"/></svg></div>
+
+<section class="section about" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <p class="eyebrow">Who We Are</p>
+      <h2 class="stitle">A Family Table,<br>Open to All</h2>
+      <p class="lead">Zara's Mediterranean Kitchen brings the traditional taste of authentic Mediterranean cuisine to the Woodlands area. Our philosophy is simple: healthy, homemade, nutritious, mouthwatering family recipes built on love, health, family and community.</p>
+      <p class="lead" style="margin-top:1rem">Everything is prepared daily — from garden-fresh vegetables and herbs to local organic meats, authentic Eastern spices, healthy fats and olive oil. These are grandmother's recipes, passed down and served the way they were meant to be.</p>
+      <div class="about-vals">
+        <div class="val"><p class="val-l">Ingredients</p><p class="val-t">Garden-fresh vegetables, local organic meats, authentic Eastern spices</p></div>
+        <div class="val"><p class="val-l">Heritage</p><p class="val-t">Family recipes passed through generations</p></div>
+        <div class="val"><p class="val-l">Philosophy</p><p class="val-t">Healthy, homemade, nutritious cooking</p></div>
+        <div class="val"><p class="val-l">Commitment</p><p class="val-t">100% Halal certified meats, prepared fresh daily</p></div>
+      </div>
+    </div>
+    <div class="about-mosaic">
+      <div class="cell"><img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-kitchen-trio-hummus-sampler_orig.png" alt="Trio hummus sampler with warm pita" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="cell"><img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/lamb-chops_orig.png" alt="Zara's marinated lamb chops" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="cell"><img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/greek-feta-salad-zara-s-mediterranean_orig.png" alt="Greek feta salad" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="cell"><img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-mediterranean-menu-falafel_orig.png" alt="Crispy hand-rolled falafel" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="cell"><img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-baklava_orig.png" alt="House-made baklava" loading="lazy" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section menu" id="menu">
+  <div class="wrap">
+    <div class="menu-head">
+      <p class="eyebrow">Our Menu</p>
+      <h2 class="stitle">Order Online</h2>
+      <p class="lead">Every dish made from scratch, daily. Add what you'd like to your cart and pick up at 415 Rayford Rd.</p>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div id="cats"></div>
+  </div>
+</section>
+
+<section class="section quotes">
+  <div class="wrap">
+    <p class="eyebrow">What Our Guests Say</p>
+    <h2 class="stitle">Voices from the Table</h2>
+    <div class="qgrid">
+      <div class="q"><p class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p><p class="q-text">"They met and surpassed all expectations… food is ready quickly and made to perfection. The service is top notch."</p><p class="q-who">N. Rodriguez</p></div>
+      <div class="q"><p class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p><p class="q-text">"Looove your food it's delicious!! Everyone's always so nice. Would definitely recommend to anyone who's a fan of Mediterranean food!!!"</p><p class="q-who">E. Machado</p></div>
+      <div class="q"><p class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p><p class="q-text">"Zara's offers many options for vegetarians and vegans. The staff is accommodating. I loved the colorful tiles on the ceiling and beautiful lanterns."</p><p class="q-who">Ariel T.</p></div>
+      <div class="q"><p class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p><p class="q-text">"The reviews don't lie. The food and service were amazing. Homemade pita and tzatziki were so fresh and the best I have ever had."</p><p class="q-who">Jamie D.</p></div>
+      <div class="q"><p class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p><p class="q-text">"Hands down the best restaurant in the entire Houston area! Everything is bursting with flavor right down to their special house ice tea."</p><p class="q-who">Jordan B.</p></div>
+      <div class="q"><p class="q-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p><p class="q-text">"Amazing food! Their stuffed grape leaves are delectable and the Zara's Mixed Grill is a must! Decor is bright and colorful and the waiters are friendly."</p><p class="q-who">Stephanie D.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section catering" id="catering">
+  <div class="wrap cat-grid">
+    <div>
+      <p class="eyebrow">Catering &amp; Events</p>
+      <h2 class="stitle">Planning Your Event Has Never Been Easier — or Tastier</h2>
+      <p class="lead">Party trays and platters packed with the aromatic and authentic flavors of the Mediterranean, for Spring and neighboring communities.</p>
+      <div class="cat-list">
+        <div class="cat-item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Weddings</div>
+        <div class="cat-item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="5" width="14" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M7 5V3M13 5V3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Corporate Events</div>
+        <div class="cat-item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16l3-6 3 4 3-8 3 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Private Celebrations</div>
+      </div>
+      <a href="tel:7135759272" class="btn btn-primary" style="margin-top:1.8rem">Inquire About Catering</a>
+    </div>
+    <div class="cat-card">
+      <p class="cat-q">"Let us know how we can make your special event unforgettable."</p>
+      <p class="cat-a">We respond within 24 hours</p>
+    </div>
+  </div>
+</section>
+
+<div class="delivery">
+  <div class="del-in">
+    <p class="del-t">Delicious &amp; authentic Mediterranean food delivered to your door</p>
+    <div class="del-links">
+      <a href="https://www.doordash.com/store/zara-s-mediterranean-kitchen-spring-42431/" target="_blank" rel="noopener">DoorDash</a>
+      <a href="https://www.ubereats.com/houston/food-delivery/zaras-mediterranean-kitchen/7qGC-_YaSp234JDvqqq1Pw" target="_blank" rel="noopener">Uber Eats</a>
+      <a href="https://www.grubhub.com/restaurant/zaras-mediterranean-kitchen-415-rayford-rd-ste-300-spring/550394" target="_blank" rel="noopener">Grubhub</a>
+    </div>
+  </div>
+</div>
+
+<section class="section contact" id="contact">
+  <div class="wrap">
+    <p class="eyebrow">Visit Us</p>
+    <h2 class="stitle">We Look Forward to Serving You</h2>
+    <div class="c-grid">
+      <div class="c-block">
+        <h3>Location</h3>
+        <p>415 Rayford Rd<br>Spring, TX 77386</p>
+        <p style="margin-top:.9rem"><a href="tel:7135759272">(713) 575-9272</a></p>
+      </div>
+      <div class="c-block">
+        <h3>Hours</h3>
+        <div class="hrow"><span>Sun &ndash; Thu</span><span>11am &ndash; 9pm</span></div>
+        <div class="hrow"><span>Fri &ndash; Sat</span><span>11am &ndash; 10pm</span></div>
+      </div>
+      <div class="c-block">
+        <h3>Connect</h3>
+        <p><a href="https://www.facebook.com/ZaraMediterraneanKitchen" target="_blank" rel="noopener">Facebook</a></p>
+        <p><a href="https://g.page/r/CUaSuZ_L6Ls5EBA" target="_blank" rel="noopener">Google</a></p>
+        <p><a href="https://www.yelp.com/biz/zaras-mediterranean-kitchen-spring-5" target="_blank" rel="noopener">Yelp</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-in">
+    <div class="foot-brand">
+      <img src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-kitchen-logo_orig.png" alt="" onerror="this.style.display='none'">
+      <span class="foot-name">Zara's Mediterranean Kitchen</span>
+    </div>
+    <div class="foot-social">
+      <a href="https://www.facebook.com/ZaraMediterraneanKitchen" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://g.page/r/CUaSuZ_L6Ls5EBA" target="_blank" rel="noopener">Google</a>
+      <a href="https://www.yelp.com/biz/zaras-mediterranean-kitchen-spring-5" target="_blank" rel="noopener">Yelp</a>
+    </div>
+  </div>
+  <div class="foot-bar">
+    All meats served are 100% Halal (Kosher) Certified<br>
+    415 Rayford Rd, Spring, TX 77386 &middot; (713) 575-9272
+  </div>
+  <div class="foot-concept">
+    Design concept only &mdash; not affiliated with, endorsed by, or operated by
+    Zara's Mediterranean Kitchen. Orders placed here are not received by the restaurant.
+  </div>
+</footer>
+
+<div class="concept-flag" role="note">
+  <span class="concept-dot" aria-hidden="true"></span>
+  <span class="concept-full">Design concept &mdash; not the official Zara's site</span>
+  <span class="concept-short">Design concept</span>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="cart" id="cart" aria-label="Shopping cart" aria-hidden="true">
+  <div class="cart-head">
+    <h3>Your Order</h3>
+    <button class="cart-close" id="cartclose" aria-label="Close cart">&times;</button>
+  </div>
+  <div class="cart-body" id="cartbody"></div>
+  <div class="cart-foot">
+    <div class="trow"><span>Subtotal</span><span id="sub">$0.00</span></div>
+    <div class="trow"><span>Tax (8.25%)</span><span id="tax">$0.00</span></div>
+    <div class="trow total"><span>Total</span><span id="tot">$0.00</span></div>
+    <button class="btn btn-primary checkout" id="checkout">Proceed to Checkout</button>
+    <p class="cart-note">Pickup at 415 Rayford Rd, Spring TX &middot; Call (713) 575-9272</p>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <span id="toasttext">Added to cart</span>
+</div>
+
+<script>
+const B = "https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/";
+
+const MENU = [
+ {id:"app", label:"Appetizers", groups:[
+  {items:[
+   {n:"Spanakopita",d:"Baked Greek savory pastry of sautéed spinach, feta cheese and Mediterranean herbs.",p:5.75,t:["Veg"],i:"zara-mediterranean-menu-spanakopita-min_orig.png"},
+   {n:"Halloumi Fried Cheese",d:"Slices of fresh goat and sheep cheese sautéed in olive oil and herbs, garnished with cucumbers and tomatoes.",p:14.95,t:["Veg","GF"],i:"zara-mediterranean-menu-hallume-fried-cheese-min_orig.png"},
+   {n:"Loaded Greek Fries",d:"Seasoned fries with olive oil, garlic, oregano, black pepper, cheese, parsley and 'Zaru Paru' sauce.",p:8.95,t:["Veg"]},
+   {n:"Crispy Gyro Fries",d:"Our famous loaded Greek fries with thinly sliced crispy gyros, 'Zaru Paru' sauce and tzatziki.",p:11.95},
+   {n:"Zara's Shawarma Fries",d:"Chicken or beef shawarma over loaded Greek fries with 'Zaru Paru' sauce.",p:11.95},
+   {n:"Fried Cauliflower",d:"Tender bits of cauliflower florets seasoned with homemade batter, fried to perfection, with 'Zaru Paru' sauce.",p:11.95,t:["Veg"]},
+   {n:"Mohammarah Dip",d:"Tasty blend of roasted red bell pepper, red chili sauce, walnuts, fresh garlic and chef's spices.",p:11.95,t:["Veg","V","N"],i:"zara-mediterranean-menu-mohammarah-dip-orig-min_orig.png",note:"Medium"},
+   {n:"Grecian Dip (Tzatziki)",d:"Creamy blend of homemade Greek yogurt and spices with mint, cucumber and olive oil.",p:9.95,t:["Veg","GF"],i:"zara-mediterranean-menu-tzatziki-grecian-dip-orig-min_orig.png",note:"Medium"},
+   {n:"Crispy Falafels (4 pcs)",d:"Crispy vegetarian patties crafted from chickpeas, fava beans, herbs and spices.",p:11.95,t:["Veg","V"],i:"zara-mediterranean-menu-falafel_orig.png"},
+   {n:"Fried Kibbeh (2 pcs)",d:"Handcrafted croquette made with cracked wheat stuffed with seasoned ground beef, roasted almonds and house spices.",p:5.95,t:["N"],i:"zara-mediterranean-menu-kibbeh-min_orig.png"},
+   {n:"Maa! Maa! Cheese",d:"Fresh goat cheese garnished with toasted walnut crumbles, olives, dry mint, parsley and olive oil.",p:12.95,t:["Veg","V","GF"],i:"zara-mediterranean-maa-maa-cheese-orig-min_orig.png"},
+   {n:"Zara's Sambosa (4 pcs)",d:"Flaky golden brown shell stuffed with beef, vegetables, or minced chicken.",p:6.75,i:"zara-s-mediterranean-sambosas-orig-min_orig.png"},
+   {n:"Baba Ghanoush",d:"Fire-roasted eggplant blended with garlic, sesame seed paste, and Mediterranean spices.",p:10.95,t:["Veg","V","GF"],i:"zara-s-mediterranean-baba-ghanoush-orig-min_4.png",note:"Medium"},
+   {n:"Stuffed Grape Leaves",d:"Six hand-crafted stuffed grape leaves with rice, parsley, onions, lemon juice and olive oil.",p:8.95,t:["GF"],i:"grape-leaves_orig.png",note:"Vegetarian"},
+   {n:"Labneh",d:"Tangy and creamy Mediterranean yogurt drizzled with silky olive oil and earthy za'atar spice.",p:9.95,t:["Veg","GF"],i:"zara-mediterranean-menu-labneh-orig-min_orig.png",note:"Medium"},
+   {n:"Vegetarian Maza Platter",d:"Choose any four delicious vegetarian options from our maza selection.",p:15.95,t:["Veg"],i:"zara-mediterranean-menu-vegetarian-maza-orig-min_orig.png"}
+  ]}
+ ]},
+
+ {id:"hum", label:"Hummus", groups:[
+  {items:[
+   {n:"Traditional Hummus",d:"Creamy blend of garbanzo beans, garlic, lemon juice and sesame seed paste topped with olives, paprika, parsley and olive oil.",p:9.95,t:["Veg","V","GF"],i:"traditional-hummus_2.png",note:"Medium"},
+   {n:"Mediterranean Hummus",d:"Traditional hummus topped with feta cheese, Roma and sun-dried tomatoes, olives, parsley, paprika and olive oil.",p:9.95,t:["Veg","GF"],note:"Medium"},
+   {n:"Red Bell Pepper Hummus",d:"Traditional hummus infused with roasted bell peppers topped with walnuts, parsley, sautéed red bell peppers and olive oil.",p:9.95,t:["Veg","GF","N"],i:"zara-s-mediterranean-kitchen-red-bell-pepper-hummus_orig.png",note:"Medium"},
+   {n:"Basil Pesto Hummus",d:"Traditional hummus infused with our signature basil pesto mix, garnished with feta, sun-dried tomatoes, roasted walnuts, parsley and olive oil.",p:9.95,t:["Veg","V","N"],i:"zara-s-mediterranean-kitchen-basil-pesto-hummus_orig.png",note:"Medium"},
+   {n:"Smoky Chipotle Hummus",d:"Traditional hummus infused with chipotle peppers, topped with feta, paprika, parsley and olive oil. Creamy, smoky, slightly sweet and so addicting.",p:9.95,t:["Veg","GF"],note:"Medium"},
+   {n:"Creamy Spicy Hummus",d:"Traditional hummus infused with our homemade chili pepper hot sauce, topped with roasted walnuts, feta, paprika and parsley, drizzled with olive oil.",p:9.95,t:["Veg","GF","N"],note:"Medium"},
+   {n:"Trio Hummus Sampler",d:"Generous portions of Traditional, Basil Pesto and Red Bell Pepper hummus. Served with warm pita bread. A must try!",p:12.95,t:["Veg"],i:"zara-s-mediterranean-kitchen-trio-hummus-sampler_orig.png"}
+  ]}
+ ]},
+
+ {id:"soup", label:"Soup & Salad", groups:[
+  {title:"Signature Soups", items:[
+   {n:"Lentil Soup",d:"Anatolian red lentils cooked with roasted onions and Mediterranean spices.",p:4.95,t:["Veg","V","GF"],i:"lentil-soup_orig.png"},
+   {n:"Moroccan Harira Soup",d:"Healthy, tangy soup made of tomato purée, lentils, chickpeas and vermicelli.",p:5.95,t:["Veg","V"],i:"zaras-mediterranean-kitchen-haraira-soup_orig.png"}
+  ]},
+  {title:"Salads", items:[
+   {n:"Greek Feta Salad",d:"Fresh romaine lettuce, tomatoes, Kalamata olives, red onions, cucumbers, artichokes and feta cheese.",p:10.95,t:["Veg","GF"],i:"greek-feta-salad-zara-s-mediterranean_orig.png"},
+   {n:"Gyro Salad",d:"Our Greek feta salad topped with juicy, thinly sliced gyro meat.",p:14.95},
+   {n:"Zara's Shawarma Salad",d:"Choice of chicken or beef shawarma served over Greek feta salad.",p:14.95,t:["GF"]},
+   {n:"Grilled Chicken Salad",d:"All-white chicken breast, grilled and served over Greek feta salad.",p:14.95},
+   {n:"Mediterranean Beet Salad",d:"Cooked beets marinated in house vinaigrette, fresh spring mix, arugula, baby spinach, roasted walnuts, cranberries and feta.",p:12.95,t:["Veg","GF"],i:"zara-s-mediterranean-chachu-s-salad_orig.png"},
+   {n:"Falafel Salad",d:"Greek feta salad garnished with crispy falafel crumbles.",p:12.95,t:["Veg","GF"]},
+   {n:"Zara's Crescent Salad",d:"Spring mix, romaine lettuce, arugula and sliced apples garnished with walnuts, feta cheese and cranberries.",p:12.95,t:["Veg","GF","N"]},
+   {n:"Fattoush Salad",d:"Romaine lettuce, cabbage, carrots, tomatoes, cucumbers, olives and parsley with toasted pita bites.",p:11.95,t:["Veg","V"]},
+   {n:"Tabbouleh Salad",d:"Chopped parsley, mint, fresh tomatoes, green onions and bulgur wheat.",p:11.95,t:["Veg","V"]},
+   {n:"Yogurt Cucumber Salad",d:"Diced cucumber, olives, finely chopped dill, Mediterranean herbs and mint with homemade Greek yogurt.",p:11.95,t:["Veg"]},
+   {n:"Chachu's Salad",d:"Combination of Greek feta salad and tabbouleh, served with a stuffed veggie grape leaf.",p:12.95,t:["Veg"]}
+  ]}
+ ]},
+
+ {id:"wrap", label:"Wraps", groups:[
+  {items:[
+   {n:"Falafel Wrap",d:"Crispy vegetarian patty crafted from chickpeas, fava beans, herbs and spices.",p:10.95,t:["Veg"],i:"zara-s-mediterranean-kitchen-falafel-wrap_orig.png"},
+   {n:"Chicken Shawarma Wrap",d:"Thin slices of juicy chicken breast marinated in authentic spices.",p:10.95,i:"chicken-shawarma-wrap-zara-s-mediterranean-wrap_orig.png"},
+   {n:"Beef Shawarma Wrap",d:"Thin slices of seasoned top sirloin beef wrapped in a warm pita.",p:10.95,i:"beef-shawarma-wrap-zaras-mediterranean_orig.png"},
+   {n:"Chicken Shish Kabob Wrap",d:"Succulent, boneless pieces of chicken breast char-grilled over a wood fire.",p:11.95,i:"chicken-shish-kabob-wrap-zara-s-mediterranean-kitchen_orig.png"},
+   {n:"Chicken Kefta Kabob Wrap",d:"Skewers of seasoned ground chicken wrapped in a warm pita.",p:10.95,i:"kefta-kabob-wrap-zara-s-mediterranean-kitchen_orig.png"},
+   {n:"Lamb Kefta Kabob Wrap",d:"Our signature kefta kabob skewers wrapped in a warm pita.",p:11.95},
+   {n:"Beef Koobideh Kabob Wrap",d:"Finely minced beef skewers seasoned with special spices.",p:10.95},
+   {n:"Gyro Wrap",d:"Juicy, tender, lean blends of beef and lamb seasoned with zesty Greek spices.",p:10.95,i:"gyro-wrap-zaras-mediterranean_orig.png"},
+   {n:"Crispy Chicken Wrap",d:"Hand battered, never frozen, juicy all-white chicken breast meat.",p:10.95},
+   {n:"Mixed Vegetables Wrap",d:"Delicious melody of sautéed green and red bell peppers, red onions and squash.",p:9.95,t:["Veg"]},
+   {n:"Zara's 'HOT' Chicken Wrap",d:"Tender, crispy and hot fried chicken breast wrapped in a warm pita.",p:11.95}
+  ]}
+ ]},
+
+ {id:"burg", label:"Burgers & Tortas", groups:[
+  {title:"Burgers", items:[
+   {n:"Grilled Chicken Burger",d:"Marinated in Mediterranean spices for a flavorful punch, char-grilled over a wood fire.",p:13.95,i:"grilled-chicken-burger-zara-s-mediterranean-restaurant_orig.png"},
+   {n:"Falafun Burger",d:"Signature falafel patty with hummus spread, fresh lettuce, tomatoes and tzatziki sauce.",p:13.95,t:["Veg"],i:"falafun-burger-zara-s-mediterranean-kitchen_orig.png"},
+   {n:"Zara's 'Hot' Chicken Burger",d:"Hot, tangy, crispy and juicy all-white chicken breast on a brioche bun with lettuce, coleslaw and pickled cucumbers.",p:13.95},
+   {n:"Yummy Tummy Burger",d:"Half-pound homemade beef patty with fresh lettuce, tomatoes, pickled cucumbers and red onions.",p:13.95,i:"yummy-tummy-burger-zara-s-mediterranean-kitchen_orig.png"},
+   {n:"Zara's Crispy Chicken Burger",d:"Homemade, never frozen flavorful crispy chicken breast with lettuce, tomatoes and pickled cucumbers.",p:13.95,i:"zara-s-mediterranean-kitchen-say-cheese-burger_orig.png"},
+   {n:"BBQ Chicken Burger",d:"Crispy chicken breast on a brioche bun with lettuce, tomatoes, coleslaw and BBQ sauce.",p:13.95},
+   {n:"Mango Habanero Chicken Burger",d:"Crispy chicken breast on a brioche bun with lettuce, tomatoes, coleslaw and mango habanero sauce.",p:13.95},
+   {n:"\"Say Cheese\" Burger",d:"Goat and sheep cheese sautéed in olive oil and herbs with basil pesto, lettuce and tomatoes.",p:13.95,t:["Veg"]}
+  ]},
+  {title:"Specialty Tortas", note:"Waffle fries included", items:[
+   {n:"Gyro Torta",d:"Juicy, tender, lean blends of beef and lamb seasoned with zesty Greek spices, roasted on a vertical spit.",p:13.95},
+   {n:"Falafel Torta",d:"Crispy vegetarian patties crafted from chickpeas, fava beans, herbs and spices with red cabbage and pickled turnips.",p:12.95,t:["Veg"]},
+   {n:"Chicken Shawarma Torta",d:"Thin-sliced marinated chicken breast on a toasted torta with lettuce, tomatoes and garlic sauce.",p:12.95},
+   {n:"Beef Shawarma Torta",d:"Top sirloin beef on a toasted torta with lettuce, tomatoes, pickled turnips, hummus and garlic sauce.",p:13.95}
+  ]}
+ ]},
+
+ {id:"entree", label:"Signature Entrées", groups:[
+  {items:[
+   {n:"Falafel Platter",d:"Five crispy vegetarian patties crafted from chickpeas, fava beans, herbs and spices.",p:16.95,t:["Veg","V","GF"],i:"published/falafel-platter.png"},
+   {n:"Chicken Shawarma Platter",d:"Thinly sliced chicken breast marinated in house spices.",p:17.95,i:"chicken-shawarma-platter_orig.png"},
+   {n:"Beef Shawarma Platter",d:"Thinly sliced top sirloin beef marinated in authentic house spices.",p:18.95,i:"beef-shawarma-platter_orig.png"},
+   {n:"Gyros Platter",d:"Tender, lean blend of ground beef and lamb seasoned with zesty Greek spices.",p:18.95,i:"zara-s-mediterranean-gyro-platter_orig.png"},
+   {n:"Shawarma Lover's Platter",d:"Combination of two meat selections with your choice of sides.",p:19.95,i:"shawarma-lover-s-platter_orig.png"},
+   {n:"Mediterranean Salmon Platter",d:"Wild Alaskan salmon filet (8 oz) marinated in savory Mediterranean herbs and spices.",p:21.95,i:"salmon-platter_orig.png"},
+   {n:"Vegetarian Moussaka",d:"Broiled eggplant simmered in a sweet herb, roasted tomato sauce.",p:17.95,t:["Veg","V","GF"],i:"vegetarian-moussaka_orig.png"},
+   {n:"Meat Moussaka",d:"Tri-layered casserole of eggplant, beef, herbs, tomatoes, fresh potatoes and hearty béchamel sauce.",p:19.95,i:"meat-moussake_orig.png"},
+   {n:"Roasted Lamb Shank",d:"Fork-tender oven roasted lamb shank simmered at least 24 hours in special house spices.",p:23.95,i:"lamb-shank-1_orig.png"},
+   {n:"Roasted Chicken Mandi",d:"Half chicken marinated in exotic Mediterranean herbs and spices, cooked on a rotisserie.",p:15.95,note:"Half"},
+   {n:"Emperor's Hummus",d:"Traditional hummus topped with your choice of thinly sliced gyros, chicken or beef shawarma.",p:16.95,i:"emperor-s-hummus_orig.png"},
+   {n:"Grilled Tilapia Platter",d:"Wild-caught tilapia filet marinated in chef's special herbs, grilled to perfection.",p:18.95,i:"tilapia-platter_orig.png"}
+  ]},
+  {title:"Mediterranean Quesadilla Platter", items:[
+   {n:"Cheese Quesadilla",d:"Toasted flour tortilla with chef-selected cheese, served with hummus dip.",p:12.95,t:["Veg"]},
+   {n:"Mixed Vegetables Quesadilla",d:"Sautéed vegetables and chef-selected cheese in a toasted flour tortilla.",p:14.95,t:["Veg"]},
+   {n:"Falafel Quesadilla",d:"Crispy falafel crumbles and cheese in a toasted flour tortilla.",p:14.95,t:["Veg"]},
+   {n:"Chicken Shawarma Quesadilla",d:"Marinated chicken shawarma and cheese in a toasted flour tortilla.",p:16.95},
+   {n:"Beef Shawarma Quesadilla",d:"Top sirloin beef shawarma and cheese in a toasted flour tortilla.",p:18.95},
+   {n:"Lamb Gyros Quesadilla",d:"Zesty lamb and beef gyro meat with cheese in a toasted flour tortilla.",p:18.95},
+   {n:"Mediterranean Shrimp Quesadilla",d:"Sautéed Mediterranean shrimp and cheese in a toasted flour tortilla.",p:18.95},
+   {n:"Mediterranean Salmon Quesadilla",d:"Wild Alaskan salmon and cheese in a toasted flour tortilla.",p:19.95}
+  ]},
+  {title:"Mediterranean Tacos", note:"Flour or corn tortillas, served with hummus dip", items:[
+   {n:"Cheese Tacos",d:"Chef-selected cheese in flour or corn tortillas with hummus dip.",p:12.95,t:["Veg"]},
+   {n:"Mixed Vegetables Tacos",d:"Sautéed Mediterranean vegetables in flour or corn tortillas.",p:14.95,t:["Veg"]},
+   {n:"Falafel Tacos",d:"Crispy falafel in flour or corn tortillas with hummus dip.",p:14.95,t:["Veg"]},
+   {n:"Chicken Shawarma Tacos",d:"Marinated chicken shawarma in flour or corn tortillas.",p:16.95},
+   {n:"Beef Shawarma Tacos",d:"Top sirloin beef shawarma in flour or corn tortillas.",p:18.95},
+   {n:"Lamb Gyros Tacos",d:"Zesty lamb and beef gyros in flour or corn tortillas.",p:18.95},
+   {n:"Mediterranean Shrimp Tacos",d:"Sautéed Mediterranean shrimp in flour or corn tortillas.",p:18.95},
+   {n:"Mediterranean Salmon Tacos",d:"Wild Alaskan salmon in flour or corn tortillas.",p:19.95}
+  ]}
+ ]},
+
+ {id:"grill", label:"Wood-Fire Grilled", groups:[
+  {items:[
+   {n:"Beef Shish Kabob",d:"Tender chunks of juicy top sirloin beef marinated to a flavorful delight, grilled over a wood fire.",p:18.95,i:"beef-shish-kabob_orig.png"},
+   {n:"Chicken Shish Kabob",d:"Tender chunks of boneless chicken breast marinated in special yogurt sauce and herbs.",p:17.95,i:"chicken-shish-kabob-1_orig.png"},
+   {n:"Lamb Shish Kabob",d:"Finest cut of tender lamb chunks marinated in house spices, grilled to order.",p:19.95,i:"lamb-shish-kabob_orig.png"},
+   {n:"Kefta Kabobs",d:"Two skewers of blended finely ground top sirloin beef and lamb, fresh parsley, onions and Mediterranean herbs.",p:17.95,i:"kefta-kabob1_orig.png"},
+   {n:"Chicken Adana Kabobs",d:"Two skewers of ground chicken mixed with secret Turkish spices and herbs, sumac and chili flakes.",p:16.95},
+   {n:"Chicken Kefta Kabob",d:"Two skewers of grilled ground chicken breast infused with fresh parsley, Mediterranean herbs and onions.",p:16.95,i:"chicken-kefta-kabob_orig.png"},
+   {n:"Beef Koobideh",d:"Two skewers of minced beef seasoned with chef's special spices.",p:17.95,i:"beef-koobideh_orig.png"},
+   {n:"Beef Adana Kabobs",d:"Ground beef kabobs packed with flavors from Turkish spices and herbs. Served as two skewers.",p:17.95},
+   {n:"Zara's Lamb Chops (4 pcs)",d:"Mouthwatering meaty lamb chops marinated in a special blend of house spices.",p:27.95,i:"lamb-chops_orig.png"},
+   {n:"Kabob-e-Sultani",d:"A skewer of beef koobideh and a skewer of chicken shish kabob.",p:19.95,i:"kabob-e-sultani-1_orig.png"},
+   {n:"Chicken Souvlaki Kabobs",d:"Tender and juicy cubes of chicken breast marinated overnight in Greek spices and herbs.",p:17.95},
+   {n:"Lamb Souvlaki Kabobs",d:"Juicy lamb meat cut in cubes, marinated in Greek spices and herbs, then cooked horizontally.",p:19.95},
+   {n:"Beef Souvlaki Kabobs",d:"Tender and juicy Greek steak kabobs — one of the most popular street foods in Greece.",p:18.95},
+   {n:"Kebabalicious Platter",d:"A skewer of chicken shish kabob, beef koobideh and kefta kabob served on seasoned basmati rice.",p:19.95,i:"ummah-grill-platter_4.png"},
+   {n:"Shish Kabob Combo",d:"A skewer of juicy chicken shish kabob and a skewer of beef shish kabob.",p:21.95,i:"shish-kabob-combo_orig.png"},
+   {n:"Souvlaki Kabob Combo",d:"A skewer of chicken souvlaki and a skewer of beef souvlaki kabobs.",p:21.95,i:"ummah-grill-platter_3.png"},
+   {n:"Zara's Mixed Grill Platter",d:"A skewer of chicken shish kabob, beef koobideh, kefta kabob and juicy chicken and beef shawarma. Feeds 2+.",p:34.95,i:"mixed-grill_orig.png"},
+   {n:"Ummah Grill Platter",d:"Our grand platter: two kefta kabob skewers, two chicken shish kabob skewers, two beef koobideh skewers, plus beef and lamb selections. Feeds a gathering.",p:94.95,i:"ummah-grill-platter_6.png"}
+  ]}
+ ]},
+
+ {id:"kids", label:"Kid's Specials", groups:[
+  {items:[
+   {n:"Kid's Platter",d:"Choice of chicken, beef shawarma or gyro meat served with basmati rice and traditional hummus.",p:10.95,i:"kid-s-platter-1_orig.png"},
+   {n:"Chicken or Beef Shawarma Pita",d:"Thin slices of juicy chicken or beef shawarma marinated in Mediterranean spices.",p:10.95,i:"kid-s-platter_orig.png"},
+   {n:"Gyro Pita",d:"Juicy, tender, lean blends of beef and lamb seasoned with zesty Greek spices.",p:10.95,i:"gyro-pita_orig.png"},
+   {n:"Crispy Chicken Sandwich",d:"Hand-breaded juicy crispy chicken breast with 'Zaru Paru' sauce. Served with crispy waffle fries.",p:10.95},
+   {n:"Chicken Tenders (3 pcs)",d:"Served with your choice of honey mustard, ranch or ketchup.",p:8.95,i:"chicken-tenders_orig.png"},
+   {n:"Junior Burger",d:"Homemade beef patty topped with lettuce, tomatoes and garlic sauce.",p:10.95,i:"yummy-tummy-burger-1_orig.png"},
+   {n:"Grilled Chicken Burger",d:"Grilled chicken patty topped with lettuce, tomatoes and garlic sauce.",p:10.95,i:"chicken-burgers_orig.png"},
+   {n:"Chicken Nuggets",d:"Hand-breaded premium all-white meat nuggets. Served with crispy waffle fries.",p:8.95}
+  ]},
+  {title:"Kids Quesadillas", note:"Served with crispy waffle fries", items:[
+   {n:"Cheese Quesadilla",d:"Toasted flour tortilla stuffed with chef-selected cheese, cut in triangular wedges.",p:7.95,t:["Veg"]},
+   {n:"Mixed Vegetables Quesadilla",d:"Toasted flour tortilla with sautéed vegetables and chef-selected cheese.",p:9.95,t:["Veg"]},
+   {n:"Chicken Shawarma Quesadilla",d:"Toasted flour tortilla with marinated chicken shawarma and cheese.",p:10.95},
+   {n:"Beef Shawarma Quesadilla",d:"Toasted flour tortilla with top sirloin beef shawarma and cheese.",p:11.95},
+   {n:"Gyros Quesadilla",d:"Toasted flour tortilla with zesty gyro meat and cheese.",p:11.95},
+   {n:"Shrimp Quesadilla",d:"Toasted flour tortilla with sautéed shrimp and cheese.",p:11.95}
+  ]}
+ ]},
+
+ {id:"sides", label:"Sides & Extras", groups:[
+  {title:"Sides", items:[
+   {n:"Pita Basmati Rice",d:"Seasoned basmati rice.",p:2.95,t:["Veg"]},
+   {n:"Waffle Fries",d:"Crispy golden waffle fries.",p:3.95,t:["Veg"]},
+   {n:"Sweet Potato Fries",d:"Crispy sweet potato fries.",p:3.95,t:["Veg"]},
+   {n:"Sautéed Shrimp (6 pc)",d:"Six Mediterranean-seasoned sautéed shrimp.",p:7.95},
+   {n:"Grilled Salmon Fillet (8 oz)",d:"Wild Alaskan salmon fillet, Mediterranean seasoned.",p:7.95},
+   {n:"Chicken, Beef or Gyros Meat",d:"An extra portion of your choice of meat.",p:4.95}
+  ]},
+  {title:"Extras", items:[
+   {n:"Pita Bread",d:"Warm house-baked pita.",p:0.95,t:["Veg"]},
+   {n:"Feta Cheese",d:"Side of crumbled feta cheese.",p:1.50,t:["Veg"]},
+   {n:"Garlic Sauce",d:"House garlic sauce.",p:0.95,t:["Veg"]},
+   {n:"Tzatziki Sauce",d:"Creamy cucumber yogurt sauce.",p:0.95,t:["Veg"]},
+   {n:"Salad Dressing",d:"House vinaigrette dressing.",p:1.25,t:["Veg"]},
+   {n:"American Cheese",d:"Slice of American cheese.",p:0.75,t:["Veg"]},
+   {n:"Caramelized Onions",d:"Slow-caramelized onions.",p:1.00,t:["Veg"]},
+   {n:"Grilled Tomato",d:"Fire-grilled tomato.",p:1.00,t:["Veg"]},
+   {n:"Sliced Cucumbers",d:"Fresh sliced cucumbers.",p:1.25,t:["Veg"]},
+   {n:"Kalamata Black Olives",d:"Side of Kalamata olives.",p:1.25,t:["Veg"]},
+   {n:"Zara's Hot Sauce",d:"Our homemade chili pepper hot sauce.",p:1.00,t:["Veg"]}
+  ]}
+ ]},
+
+ {id:"dess", label:"Desserts", groups:[
+  {items:[
+   {n:"Baklava",d:"Sheets of phyllo layered with chopped nuts, chocolate or coconut, baked and brushed with butter, cinnamon, honey and a hint of rose water.",p:3.50,t:["N"],i:"zara-s-mediterranean-baklava_orig.png"},
+   {n:"Tiramisu",d:"Creamy dessert of espresso-soaked lady fingers dipped in coffee, layered with cocoa and mascarpone cheese.",p:8.95,i:"zara-s-mediterranean-tiramisu-dessert_orig.png"},
+   {n:"Classic Cheesecake",d:"Cinnamon graham cracker crust filled with a creamy, smooth cream cheese filling and baked to perfection.",p:3.95,i:"classic-cheesecake-zara-s-mediterranean_orig.png"},
+   {n:"Strawberry Swirl Cheesecake",d:"Cream cheese base swirled with strawberry preserves on a buttery graham cracker crust.",p:4.25,i:"strawberry-cheesecake-zara-s-mediterranean-kitchen_orig.png"},
+   {n:"Gelato",d:"Frozen dessert made with whole milk. Vanilla, almond, chocolate, pistachio or sorbet.",p:3.95},
+   {n:"Zara's Chi Chewy",d:"Homemade crumbly cookie crust topped with silky cream cheese, raspberry filling and whipped cream, drizzled with pecans.",p:7.95,t:["N"],i:"zara-s-mediterranean-kitchen-chi-chewy_orig.png"},
+   {n:"Galaktoboureko",d:"Greek dessert made of semolina custard baked in filo dough.",p:6.95},
+   {n:"Chocolate Temptation Cake",d:"Chocolate cake filled with hazelnut cream cheese and hazelnut crunch, topped with chocolate glaze and sprinkles.",p:4.95,t:["N"],i:"zara-s-mediterranean-chocolate-cake_orig.png"},
+   {n:"Rice Pudding",d:"Whole milk, sweetened rice and cinnamon sprinkled with nuts. Served warm.",p:6.95,t:["N"],i:"zara-s-mediterranean-rice-pudding_orig.png"}
+  ]}
+ ]},
+
+ {id:"bev", label:"Beverages", compact:true, groups:[
+  {title:"Vitamin Bar", items:[
+   {n:"Pure Mango Juice",d:"Fresh mango juice.",p:6.95,t:["Veg","V"]},
+   {n:"For Real Orange Juice",d:"Freshly squeezed organic orange juice.",p:6.95,t:["Veg","V"]},
+   {n:"Organic Apple Juice",d:"Freshly made organic apple juice.",p:6.95,t:["Veg","V"]},
+   {n:"Crazy Carrot",d:"Healthy and sweet blend of carrots, apples and honey.",p:7.50,t:["Veg"]},
+   {n:"Heart Beet",d:"Nutrient-packed fusion of beet root and carrots with a citrus flare.",p:7.50,t:["Veg","V"]},
+   {n:"Cool Cucumber",d:"Refreshing mix of cucumbers, apples, lemons and ginger.",p:7.50,t:["Veg","V"]},
+   {n:"Fresh Pomegranate Juice",d:"Freshly pressed pomegranate juice, loaded with antioxidants.",p:7.50,t:["Veg","V"]},
+   {n:"Passion Fruit Juice",d:"Pressed passion fruit, rich in vitamins, refreshingly sweet and tart.",p:7.50,t:["Veg","V"]},
+   {n:"Beet the Kale",d:"Cucumber, kale, beetroot and honey.",p:7.50,t:["Veg"]},
+   {n:"Stay Healthy",d:"Fresh blend of beetroots, apples, celery, cucumbers and honey.",p:7.50,t:["Veg"]},
+   {n:"The Greekie",d:"Brought to you by oranges, apples, beets, celery and carrots.",p:7.50,t:["Veg","V"]},
+   {n:"The Sunshine",d:"Tropical twist of pineapple, mango and honey.",p:7.50,t:["Veg"]},
+   {n:"Refreshing Coconut Water",d:"Refreshing coconut water with fresh chunks of coconut.",p:7.50,t:["Veg","V"]},
+   {n:"Forever Young",d:"Organic oranges, pineapple and carrots with a hint of squeezed lemons.",p:7.50,t:["Veg","V"]},
+   {n:"Honey Delight",d:"Honeydew melon, cucumber and fresh coconut water with a hint of mint.",p:7.50,t:["Veg"]},
+   {n:"Apple Pucker",d:"Romaine lettuce, baby spinach, apples and fresh ginger.",p:7.50,t:["Veg","V"]}
+  ]},
+  {title:"Signature Mocktails", items:[
+   {n:"Sangria",d:"A sparkly fruit blend of cranberry, grapes and oranges.",p:6.95,t:["Veg","V"]},
+   {n:"Mai Tai Punch",d:"Tropical combination of orange, pineapple and lemon juice with a hint of grenadine.",p:6.95,t:["Veg","V"]},
+   {n:"Virgin Mimosa",d:"A perfect orange and pineapple drink for all seasons.",p:6.95,t:["Veg","V"]},
+   {n:"Peach Margarita",d:"Refreshing melody of fresh peaches and tangy lime juice.",p:6.95,t:["Veg","V"]},
+   {n:"Strawberry Margarita",d:"Brighter moments shared with this fresh strawberry drink.",p:6.95,t:["Veg","V"]},
+   {n:"Strawberry Daiquiri",d:"A super refreshing strawberry iced drink to sip on a hot summer day.",p:6.95,t:["Veg","V"]},
+   {n:"Bloody Mary Mocktail",d:"A classic cool and spicy tomato juice based drink.",p:6.95,t:["Veg","V"]},
+   {n:"Sparkling Peach Punch",d:"A vibrant, refreshing blend of peach, mango and ginger ale.",p:6.95,t:["Veg","V"]},
+   {n:"Orange Moscow Mule",d:"A combination of oranges and ginger ale.",p:6.95,t:["Veg","V"]},
+   {n:"Virgin Cosmopolitan",d:"Cranberry, orange juice and lime with a splash of sparkling water.",p:6.95,t:["Veg","V"]},
+   {n:"Mother Mocktail",d:"Refreshing and fizzy apple, cranberry and orange.",p:6.95,t:["Veg","V"]},
+   {n:"Cranberry Mocktail",d:"Cranberries, pomegranate and mint with a touch of lemon.",p:6.95,t:["Veg","V"]},
+   {n:"Blue Lagoon",d:"Delicious citrus flavor and a dazzling blue hue.",p:6.95,t:["Veg","V"]},
+   {n:"Zara's Special Mocktail",d:"A delicious mix of passion fruit, orange, pineapple and pomegranate.",p:6.95,t:["Veg","V"]},
+   {n:"Sunrise Mocktail",d:"A melody of peaches, oranges and refreshing pomegranate.",p:6.95,t:["Veg","V"]},
+   {n:"Appletini Mocktail",d:"Apple juice with a fizzy citrus flair. Delicious!",p:6.95,t:["Veg","V"]},
+   {n:"Classic Shirley Temple",d:"A fizzy pomegranate based drink.",p:6.95,t:["Veg","V"]},
+   {n:"Juicy Julep",d:"Pineapples, oranges and lime juice come together in this non-alcoholic version.",p:6.95,t:["Veg","V"]},
+   {n:"Orange Margarita",d:"A sweet and tangy citrus burst to quench your thirst.",p:6.95,t:["Veg","V"]}
+  ]},
+  {title:"Famous Virgin Mojitos", items:[
+   {n:"Fresh Mint Mojito",d:"Lightly sweetened perfect blend of fresh mint and lime juice.",p:6.95,t:["Veg","V"]},
+   {n:"Passion Fruit Mojito",d:"Fizzy blend of passion fruit with mint.",p:6.95,t:["Veg","V"]},
+   {n:"Watermelon Mint Mojito",d:"Fresh watermelon and mojito mix with mint.",p:6.95,t:["Veg","V"]},
+   {n:"Raspberry Mint Mojito",d:"Refreshing raspberry and mint in a mojito mix.",p:6.95,t:["Veg","V"]},
+   {n:"Strawberry Cucumber Mojito",d:"Mojito mix blended with fresh strawberries and cucumbers.",p:6.95,t:["Veg","V"]},
+   {n:"Zara's Special Mojito",d:"It's our special thirst quencher. Ask for more!",p:6.95,t:["Veg","V"]},
+   {n:"Mango Mania Mojito",d:"Classy combination of mangoes and mint in a mojito mix.",p:6.95,t:["Veg","V"]},
+   {n:"Blackberry Mint Mojito",d:"Blend of blackberries, mint and our homemade mojito mix.",p:6.95,t:["Veg","V"]},
+   {n:"Strawberry Mint Mojito",d:"Delicious blend of fresh strawberries, mint and lime juice.",p:6.95,t:["Veg","V"]},
+   {n:"Orange Mango Mint Mojito",d:"Mango juice, orange juice, lime and mint make a magical drink!",p:6.95,t:["Veg","V"]}
+  ]},
+  {title:"Zara's Signature Smoothies", items:[
+   {n:"Mango Lassi",d:"Yogurt, mangoes and seasoned milk.",p:7.95,t:["Veg"]},
+   {n:"Sweet Yogurt Lassi",d:"A blend of Greek yogurt and seasoned milk.",p:7.95,t:["Veg"]},
+   {n:"Salty Yogurt Lassi",d:"A blend of Greek yogurt and seasoned milk with a pinch of salt.",p:7.95,t:["Veg"]},
+   {n:"Chai Smoothie",d:"Chai, whole milk, masala mix and honey.",p:7.95,t:["Veg"]},
+   {n:"Berry Good",d:"Blueberries, strawberries, Greek yogurt and bananas.",p:7.95,t:["Veg"]},
+   {n:"The Aladdin",d:"Strawberries, passion fruit, apples and coconut.",p:7.95,t:["Veg"]},
+   {n:"Turkish 'Doogh' Ayran",d:"A blend of yogurt, milk, mint, salt and lime.",p:7.95,t:["Veg"]},
+   {n:"Triple Flair",d:"Oranges, pineapple, grapes — yes! Refreshing and simply enjoyable.",p:7.95,t:["Veg","V"]},
+   {n:"The Greenie",d:"Spinach, banana, pineapple, coconut and honey.",p:7.95,t:["Veg"]},
+   {n:"The Sultan",d:"Pineapple, coconut, oranges and bananas.",p:7.95,t:["Veg","V"]},
+   {n:"Tropical Paradise",d:"Organic kale, banana, pineapple, fresh coconut water and honey.",p:7.95,t:["Veg"]},
+   {n:"Mediterranean Breeze",d:"Thirst-quenching explosion of strawberry, pineapple, mango, honey and lemon.",p:7.95,t:["Veg"]},
+   {n:"Cuddle on the Beach",d:"Perfect sweet harmony of pineapple and strawberries.",p:7.95,t:["Veg","V"]},
+   {n:"Piña Colada",d:"Popular blend of sweet and tangy pineapple and fresh coconut.",p:7.95,t:["Veg"]},
+   {n:"Strawberry Sunrise",d:"Strawberry, banana, Greek yogurt and honey.",p:7.95,t:["Veg"]}
+  ]},
+  {title:"Signature Milkshakes", items:[
+   {n:"Chocolate Milkshake",d:"Milk, Hershey's chocolate syrup and ice cream.",p:6.95,t:["Veg"]},
+   {n:"Merry Strawberry",d:"Strawberries, bananas, ice cream and milk.",p:6.95,t:["Veg"]},
+   {n:"Melon Strawberry Milkshake",d:"Fresh strawberries, watermelon, mint and honey.",p:6.95,t:["Veg"]},
+   {n:"The Nutty Gritty",d:"Almonds, pistachio, ice cream and milk.",p:6.95,t:["Veg","N"]},
+   {n:"Date Night Milkshake",d:"Organic dates, milk and ice cream.",p:6.95,t:["Veg"]},
+   {n:"The Islander",d:"Pineapple, coconut, ice cream and milk.",p:6.95,t:["Veg"]},
+   {n:"Coffee Milkshake",d:"Coffee, ice cream and milk.",p:6.95,t:["Veg"]}
+  ]}
+ ]}
+];
+
+/* ---------- RENDER ---------- */
+const tagClass = t => t==="GF" ? "gf" : t==="N" ? "n" : "veg";
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+let uid = 0;
+const ITEMS = {};
+
+function itemCard(it, compact){
+  const key = "i"+(++uid);
+  ITEMS[key] = {n:it.n, p:it.p, i:it.i||""};
+  const img = it.i
+    ? `<div class="card-img"><img src="${B}${it.i}" alt="${esc(it.n)}" loading="lazy" onerror="this.parentElement.classList.add('noimg');this.remove()"></div>`
+    : `<div class="card-img noimg"><span class="ph-mark">`
+      + `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true">`
+      + `<path d="M16 4c5 3 8 7 8 12a8 8 0 01-16 0c0-5 3-9 8-12z" stroke="currentColor" stroke-width="1.1"/>`
+      + `<path d="M16 10v16" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>`
+      + `</svg><span>Zara's</span></span></div>`;
+  const tags = (it.t||[]).map(t=>`<span class="tag ${tagClass(t)}">${t}</span>`).join("");
+  return `<article class="card${compact?" slim":""}">
+    ${compact?"":img}
+    <div class="card-body">
+      <h4>${esc(it.n)}</h4>
+      <p>${esc(it.d)}</p>
+      ${tags?`<div class="tags">${tags}</div>`:""}
+      <div class="card-foot">
+        <span class="price">$${it.p.toFixed(2)}${it.note?`<small>${esc(it.note)}</small>`:""}</span>
+        <button class="add" data-key="${key}">Add</button>
+      </div>
+    </div>
+  </article>`;
+}
+
+const tabsEl = document.getElementById("tabs");
+const catsEl = document.getElementById("cats");
+
+tabsEl.innerHTML = MENU.map((c,idx)=>
+  `<button class="tab${idx===0?" on":""}" data-cat="${c.id}" role="tab" aria-selected="${idx===0}">${esc(c.label)}</button>`
+).join("");
+
+catsEl.innerHTML = MENU.map((c,idx)=>{
+  const body = c.groups.map(g=>{
+    const head = g.title
+      ? `<div class="subhead"><h3>${esc(g.title)}</h3></div>${g.note?`<p class="lead" style="margin:-.6rem 0 1rem;font-size:.85rem">${esc(g.note)}</p>`:""}`
+      : "";
+    return head + `<div class="grid${c.compact?" compact":""}">${g.items.map(it=>itemCard(it,c.compact)).join("")}</div>`;
+  }).join("");
+  return `<div class="cat${idx===0?" on":""}" id="cat-${c.id}" role="tabpanel">${body}</div>`;
+}).join("");
+
+tabsEl.addEventListener("click", e=>{
+  const b = e.target.closest(".tab"); if(!b) return;
+  tabsEl.querySelectorAll(".tab").forEach(t=>{t.classList.remove("on");t.setAttribute("aria-selected","false")});
+  b.classList.add("on"); b.setAttribute("aria-selected","true");
+  catsEl.querySelectorAll(".cat").forEach(c=>c.classList.remove("on"));
+  document.getElementById("cat-"+b.dataset.cat).classList.add("on");
+});
+
+/* ---------- CART ---------- */
+const TAX = 0.0825;
+let cart = [];
+try{ cart = JSON.parse(sessionStorage.getItem("zaras-cart")||"[]"); }catch(e){ cart = []; }
+
+const $ = id => document.getElementById(id);
+const cartEl=$("cart"), scrim=$("scrim"), body=$("cartbody"),
+      countEl=$("cartcount"), toastEl=$("toast"), toastTx=$("toasttext");
+
+const money = n => "$"+n.toFixed(2);
+const save = () => { try{ sessionStorage.setItem("zaras-cart", JSON.stringify(cart)); }catch(e){} };
+
+function render(){
+  const count = cart.reduce((s,l)=>s+l.q,0);
+  countEl.textContent = count;
+
+  if(!cart.length){
+    body.innerHTML = `<div class="cart-empty">
+      <svg width="52" height="52" viewBox="0 0 20 20" fill="none"><path d="M2 3h2.5l2 11h9l2-8H6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="17" r="1.2" fill="currentColor"/><circle cx="15" cy="17" r="1.2" fill="currentColor"/></svg>
+      <p>Your cart is empty.<br>Browse the menu and add something delicious.</p>
+    </div>`;
+  } else {
+    body.innerHTML = cart.map((l,ix)=>{
+      const thumb = l.i ? `<img src="${B}${l.i}" alt="" onerror="this.remove()">` : "";
+      return `<div class="ci" data-ix="${ix}">
+        <div class="ci-thumb">${thumb}</div>
+        <div class="ci-main">
+          <span class="ci-name">${esc(l.n)}</span>
+          <span class="ci-price">${money(l.p)} each</span>
+          <div class="ci-row">
+            <div class="qty">
+              <button data-act="dec" data-ix="${ix}" aria-label="Decrease quantity">&minus;</button>
+              <span>${l.q}</span>
+              <button data-act="inc" data-ix="${ix}" aria-label="Increase quantity">+</button>
+            </div>
+            <span class="ci-sub">${money(l.p*l.q)}</span>
+          </div>
+          <button class="ci-del" data-act="del" data-ix="${ix}">Remove</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  const sub = cart.reduce((s,l)=>s+l.p*l.q,0);
+  $("sub").textContent = money(sub);
+  $("tax").textContent = money(sub*TAX);
+  $("tot").textContent = money(sub*(1+TAX));
+  save();
+}
+
+let toastT;
+function toast(msg){
+  toastTx.textContent = msg;
+  toastEl.classList.add("on");
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>toastEl.classList.remove("on"), 2100);
+}
+
+document.addEventListener("click", e=>{
+  const add = e.target.closest(".add");
+  if(add){
+    const it = ITEMS[add.dataset.key];
+    const line = cart.find(l=>l.n===it.n && l.p===it.p);
+    if(line) line.q++; else cart.push({n:it.n,p:it.p,i:it.i,q:1});
+    render();
+    toast(`${it.n} added`);
+    return;
+  }
+  const q = e.target.closest("[data-act]");
+  if(q && cartEl.contains(q)){
+    const ix = +q.dataset.ix, act = q.dataset.act;
+    if(act==="inc") cart[ix].q++;
+    else if(act==="dec"){ cart[ix].q--; if(cart[ix].q<1) cart.splice(ix,1); }
+    else if(act==="del"){
+      const row = q.closest(".ci");
+      row.classList.add("out");
+      setTimeout(()=>{ cart.splice(ix,1); render(); }, 200);
+      return;
+    }
+    render();
+  }
+});
+
+function openCart(){ cartEl.classList.add("on"); scrim.classList.add("on"); cartEl.setAttribute("aria-hidden","false"); }
+function closeCart(){ cartEl.classList.remove("on"); scrim.classList.remove("on"); cartEl.setAttribute("aria-hidden","true"); }
+$("cartbtn").addEventListener("click", openCart);
+$("cartclose").addEventListener("click", closeCart);
+scrim.addEventListener("click", closeCart);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeCart(); });
+
+$("checkout").addEventListener("click", ()=>{
+  if(!cart.length){ toast("Add something to your cart first"); return; }
+  const count = cart.reduce((s,l)=>s+l.q,0);
+  const total = $("tot").textContent;
+  toast(`Order ready — ${count} item${count>1?"s":""}, ${total}. Call (713) 575-9272`);
+});
+
+/* NAV */
+const navlinks = $("navlinks");
+$("navtoggle").addEventListener("click", ()=>navlinks.classList.toggle("open"));
+navlinks.addEventListener("click", e=>{ if(e.target.tagName==="A") navlinks.classList.remove("open"); });
+
+render();
+</script>
