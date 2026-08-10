@@ -12,9 +12,9 @@ summarizes the order and shows the restaurant's real phone number for a pickup c
 
 `index.html` — the entire site. One self-contained file, no build step, no dependencies.
 
-- 212 menu items across 11 categories, tab-filtered — 97 with photography
-- Wraps, Burgers & Tortas and Signature Entrées are fully illustrated; items without a
-  photo render a branded tile rather than an empty slot
+- 212 menu items across 11 categories, tab-filtered — 128 with photography
+- Every food category is fully illustrated. The 84 items without a photo are Beverages
+  (67) and Sides & Extras (17), which render a branded tile rather than an empty slot
 - Working cart: add, adjust quantity, remove, subtotal + 8.25% tax, persists across reloads
 - All imagery embedded as data URIs, so the page renders offline
 - Light / dark / system theming, responsive to phone width, reduced-motion respected
