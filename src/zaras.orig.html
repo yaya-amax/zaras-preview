@@ -38,7 +38,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 /* Height of the fixed nav. The sticky category tabs and anchor scrolling both key off
    this, so the three stay in agreement instead of drifting apart per breakpoint. */
-:root{--nav-h:68px;--pad-x:1.5rem}
+:root{--nav-h:70px;--pad-x:1.5rem}
 html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 3.6rem)}
 body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
 h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--heading);line-height:1.15;text-wrap:balance;font-weight:400}
@@ -59,6 +59,33 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .cart-btn{position:relative;display:flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;background:var(--saffron);color:var(--ink);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:2px;transition:background .2s,transform .15s}
 .cart-btn:hover{background:var(--saffron-light);transform:translateY(-1px)}
 .cart-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;background:var(--pomegranate);color:#fff;border-radius:10px;font-size:.68rem;font-weight:700;letter-spacing:0}
+/* LOCATION PICKER — Zara's runs two kitchens; everything order-related follows this */
+.loc-pick{
+  appearance:none;-webkit-appearance:none;
+  background:rgba(250,247,242,.08);color:var(--limestone);
+  border:1px solid rgba(200,150,62,.45);border-radius:2px;
+  padding:.5rem 1.7rem .5rem .7rem;font:inherit;font-size:.7rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;max-width:9.5rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23D9AC5C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .6rem center;
+}
+.loc-pick:hover{border-color:var(--saffron-light)}
+.loc-pick option{background:var(--aegean-deep);color:var(--limestone);text-transform:none;letter-spacing:0}
+.loc-card{border-top:2px solid transparent;padding-top:.9rem;transition:border-color .2s}
+.loc-card[data-active="true"]{border-top-color:var(--accent)}
+.loc-flag{
+  display:none;margin-left:.5rem;padding:.15rem .45rem;
+  background:var(--accent);color:var(--accent-ink);border-radius:2px;
+  font-size:.55rem;letter-spacing:.12em;vertical-align:middle;
+}
+.loc-card[data-active="true"] .loc-flag{display:inline-block}
+.loc-switch{
+  margin-top:.4rem;padding:.4rem .8rem;border:1px solid var(--line);border-radius:2px;
+  background:var(--surface);color:var(--text);font-size:.72rem;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;transition:all .18s;
+}
+.loc-switch:hover{border-color:var(--accent);color:var(--accent)}
+.loc-card[data-active="true"] .loc-switch{display:none}
 .nav-toggle{display:none;padding:.4rem}
 .nav-toggle span{display:block;width:22px;height:2px;background:var(--limestone);margin:5px 0;transition:transform .25s,opacity .25s}
 
@@ -292,7 +319,9 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   .tab{scroll-snap-align:center;flex:0 0 auto;padding:.6rem 1rem;font-size:.68rem}
 }
 @media (max-width:600px){
-  :root{--nav-h:58px;--pad-x:1.1rem}
+  /* 64px, not 58 — the location picker makes the mobile nav taller than the brand mark
+     alone would. The sticky tabs key off this, so a stale value tucks them under it. */
+  :root{--nav-h:64px;--pad-x:1.1rem}
   .section{padding-top:3.2rem;padding-bottom:3.2rem}
   .about-vals{grid-template-columns:1fr}
   .hero{min-height:88vh;min-height:88svh;padding-top:7rem}
@@ -325,9 +354,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     <li><a href="#menu">Menu</a></li>
     <li><a href="#catering">Catering</a></li>
     <li><a href="#contact">Visit</a></li>
-    <li><a href="tel:7135759272">(713) 575-9272</a></li>
+    <li><a href="tel:7135759272" id="navTel">(713) 575-9272</a></li>
   </ul>
   <div class="nav-actions">
+    <select class="loc-pick" id="locsel" aria-label="Choose which Zara's location you are ordering from">
+      <option value="rayford">Rayford Rd</option>
+      <option value="louetta">Louetta Rd</option>
+    </select>
     <button class="cart-btn" id="cartbtn" aria-label="Open cart">
       <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 3h2.5l2 11h9l2-8H6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="17" r="1.3" fill="currentColor"/><circle cx="15" cy="17" r="1.3" fill="currentColor"/></svg>
       <span class="lbl">Cart</span>
@@ -344,13 +377,13 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
   <div class="hero-inner">
     <img class="hero-logo" src="https://www.zarasmediterraneankitchen.com/uploads/1/3/0/1/130157008/zara-s-mediterranean-kitchen-logo_orig.png" alt="Zara's Mediterranean Kitchen" onerror="this.style.display='none'">
-    <p class="hero-eyebrow">415 Rayford Rd &middot; Spring, Texas</p>
+    <p class="hero-eyebrow" id="heroEyebrow">415 Rayford Rd &middot; Spring, Texas</p>
     <h1 class="hero-title">Zara's <em>Mediterranean</em> Kitchen</h1>
     <p class="hero-sub">Where every dish becomes your wish</p>
     <p class="hero-tag">Fresh &middot; Authentic &middot; Delicious</p>
     <div class="hero-actions">
       <a href="#menu" class="btn btn-primary">Order Online</a>
-      <a href="tel:7135759272" class="btn btn-ghost">Call To-Go</a>
+      <a href="tel:7135759272" class="btn btn-ghost" id="heroCall">Call To-Go</a>
     </div>
     <div class="halal">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -390,7 +423,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     <div class="menu-head">
       <p class="eyebrow">Our Menu</p>
       <h2 class="stitle">Order Online</h2>
-      <p class="lead">Every dish made from scratch, daily. Add what you'd like to your cart and pick up at 415 Rayford Rd.</p>
+      <p class="lead">Every dish made from scratch, daily. Add what you'd like to your cart and pick up at <span id="menuPickup">415 Rayford Rd</span>.</p>
     </div>
     <div class="tabs" id="tabs" role="tablist"></div>
     <div id="cats"></div>
@@ -423,7 +456,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
         <div class="cat-item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="5" width="14" height="11" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M7 5V3M13 5V3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Corporate Events</div>
         <div class="cat-item"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16l3-6 3 4 3-8 3 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Private Celebrations</div>
       </div>
-      <a href="tel:7135759272" class="btn btn-primary" style="margin-top:1.8rem">Inquire About Catering</a>
+      <a href="tel:7135759272" class="btn btn-primary" style="margin-top:1.8rem" id="cateringCall">Inquire About Catering</a>
     </div>
     <div class="cat-card">
       <p class="cat-q">"Let us know how we can make your special event unforgettable."</p>
@@ -446,15 +479,24 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 <section class="section contact" id="contact">
   <div class="wrap">
     <p class="eyebrow">Visit Us</p>
-    <h2 class="stitle">We Look Forward to Serving You</h2>
+    <h2 class="stitle">Two Kitchens, One Family</h2>
     <div class="c-grid">
-      <div class="c-block">
-        <h3>Location</h3>
-        <p>415 Rayford Rd<br>Spring, TX 77386</p>
+      <div class="c-block loc-card" data-loc="rayford">
+        <h3>Rayford Road <span class="loc-flag">Ordering from here</span></h3>
+        <p>415 Rayford Rd, Ste 300<br>Spring, TX 77386</p>
         <p style="margin-top:.9rem"><a href="tel:7135759272">(713) 575-9272</a></p>
+        <p><a href="https://maps.google.com/?q=415+Rayford+Rd+Ste+300+Spring+TX+77386" target="_blank" rel="noopener">Get directions</a></p>
+        <p><button type="button" class="loc-switch" data-switch="rayford">Order from Rayford Rd</button></p>
+      </div>
+      <div class="c-block loc-card" data-loc="louetta">
+        <h3>Louetta Road <span class="loc-flag">Ordering from here</span></h3>
+        <p>9001 Louetta Rd, Ste B<br>Spring, TX 77379</p>
+        <p style="margin-top:.9rem"><a href="tel:3463366963">(346) 336-6963</a></p>
+        <p><a href="https://maps.google.com/?q=9001+Louetta+Rd+Ste+B+Spring+TX+77379" target="_blank" rel="noopener">Get directions</a></p>
+        <p><button type="button" class="loc-switch" data-switch="louetta">Order from Louetta Rd</button></p>
       </div>
       <div class="c-block">
-        <h3>Hours</h3>
+        <h3>Hours &mdash; Both Locations</h3>
         <div class="hrow"><span>Sun &ndash; Thu</span><span>11am &ndash; 9pm</span></div>
         <div class="hrow"><span>Fri &ndash; Sat</span><span>11am &ndash; 10pm</span></div>
       </div>
@@ -482,7 +524,8 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
   </div>
   <div class="foot-bar">
     All meats served are 100% Halal (Kosher) Certified<br>
-    415 Rayford Rd, Spring, TX 77386 &middot; (713) 575-9272
+    415 Rayford Rd, Ste 300, Spring, TX 77386 &middot; (713) 575-9272<br>
+    9001 Louetta Rd, Ste B, Spring, TX 77379 &middot; (346) 336-6963
   </div>
   <div class="foot-concept">
     Design concept only &mdash; not affiliated with, endorsed by, or operated by
@@ -508,7 +551,7 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
     <div class="trow"><span>Tax (8.25%)</span><span id="tax">$0.00</span></div>
     <div class="trow total"><span>Total</span><span id="tot">$0.00</span></div>
     <button class="btn btn-primary checkout" id="checkout">Proceed to Checkout</button>
-    <p class="cart-note">Pickup at 415 Rayford Rd, Spring TX &middot; Call (713) 575-9272</p>
+    <p class="cart-note" id="cartNote">Pickup at 415 Rayford Rd, Spring TX &middot; Call (713) 575-9272</p>
   </div>
 </aside>
 
@@ -960,13 +1003,78 @@ $("checkout").addEventListener("click", ()=>{
   if(!cart.length){ toast("Add something to your cart first"); return; }
   const count = cart.reduce((s,l)=>s+l.q,0);
   const total = $("tot").textContent;
-  toast(`Order ready — ${count} item${count>1?"s":""}, ${total}. Call (713) 575-9272`);
+  toast(`Order ready — ${count} item${count>1?"s":""}, ${total}. Call ${LOC.telText} (${LOC.short})`);
 });
 
 /* NAV */
 const navlinks = $("navlinks");
 $("navtoggle").addEventListener("click", ()=>navlinks.classList.toggle("open"));
 navlinks.addEventListener("click", e=>{ if(e.target.tagName==="A") navlinks.classList.remove("open"); });
+
+/* ---------- LOCATIONS ----------
+   Zara's runs two kitchens with different phone numbers. Anything that would send a
+   customer to a specific restaurant — the phone links, the pickup line, the cart, the
+   checkout toast — follows this choice. Dialling the wrong branch is the one failure
+   actually worth engineering against, so every tel: link is bound here rather than
+   hard-coded in the markup. Both locations always stay visible in the Visit section;
+   the picker chooses where you are *ordering* from, it never hides the other one. */
+const LOCATIONS = {
+  rayford:{ key:"rayford", short:"Rayford Rd",
+    street:"415 Rayford Rd, Ste 300", city:"Spring, TX 77386",
+    tel:"7135759272", telText:"(713) 575-9272" },
+  louetta:{ key:"louetta", short:"Louetta Rd",
+    street:"9001 Louetta Rd, Ste B", city:"Spring, TX 77379",
+    tel:"3463366963", telText:"(346) 336-6963" }
+};
+
+let LOC = LOCATIONS.rayford;
+try{
+  const savedLoc = sessionStorage.getItem("zaras-loc");
+  if(savedLoc && LOCATIONS[savedLoc]) LOC = LOCATIONS[savedLoc];
+}catch(e){}
+
+function applyLocation(key, announce){
+  LOC = LOCATIONS[key] || LOCATIONS.rayford;
+  try{ sessionStorage.setItem("zaras-loc", LOC.key); }catch(e){}
+
+  const sel = $("locsel");
+  if(sel && sel.value !== LOC.key) sel.value = LOC.key;
+
+  const navTel = $("navTel");
+  if(navTel){ navTel.href = "tel:"+LOC.tel; navTel.textContent = LOC.telText; }
+
+  const heroCall = $("heroCall");
+  if(heroCall) heroCall.href = "tel:"+LOC.tel;
+
+  /* Catering follows the selected branch too. If the owner confirms catering is run
+     centrally out of one kitchen, pin this to that number instead. */
+  const cateringCall = $("cateringCall");
+  if(cateringCall) cateringCall.href = "tel:"+LOC.tel;
+
+  const eyebrow = $("heroEyebrow");
+  if(eyebrow) eyebrow.innerHTML = LOC.street+" &middot; Spring, Texas";
+
+  const pickup = $("menuPickup");
+  if(pickup) pickup.textContent = LOC.street;
+
+  const note = $("cartNote");
+  if(note) note.innerHTML = "Pickup at "+LOC.street+", "+LOC.city+" &middot; Call "+LOC.telText;
+
+  document.querySelectorAll(".loc-card").forEach(c=>{
+    c.setAttribute("data-active", String(c.dataset.loc === LOC.key));
+  });
+
+  if(announce) toast("Ordering from "+LOC.short);
+}
+
+$("locsel").addEventListener("change", e => applyLocation(e.target.value, true));
+document.querySelectorAll(".loc-switch").forEach(btn =>
+  btn.addEventListener("click", () => {
+    applyLocation(btn.dataset.switch, true);
+    document.getElementById("contact").scrollIntoView({block:"start"});
+  })
+);
+applyLocation(LOC.key, false);
 
 render();
 </script>
